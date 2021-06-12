@@ -174,6 +174,55 @@ export default function Sidebar() {
             </ul>
             <hr className="my-4 md:min-w-full" />
             <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+              Organization
+            </h6>
+
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+              <li className="items-center">
+                <Link
+                  className={
+                    "text-xs uppercase py-3 font-bold block " +
+                    (window.location.href.indexOf("/admin/users") !== -1
+                      ? "text-lightBlue-500 hover:text-lightBlue-600"
+                      : "text-blueGray-700 hover:text-blueGray-500")
+                  }
+                  to="/admin/users"
+                >
+                  <i
+                    className={
+                      "fas fa-map-marked mr-2 text-sm " +
+                      (window.location.href.indexOf("/admin/users") !== -1
+                        ? "opacity-75"
+                        : "text-blueGray-300")
+                    }
+                  ></i>{" "}
+                  Manage Users
+                </Link>
+              </li>
+              <li className="items-center">
+                <Link
+                  className={
+                    "text-xs uppercase py-3 font-bold block " +
+                    (window.location.href.indexOf("/admin/profile") !== -1
+                      ? "text-lightBlue-500 hover:text-lightBlue-600"
+                      : "text-blueGray-700 hover:text-blueGray-500")
+                  }
+                  to="/admin/profile"
+                >
+                  <i
+                    className={
+                      "fas fa-map-marked mr-2 text-sm " +
+                      (window.location.href.indexOf("/admin/profile") !== -1
+                        ? "opacity-75"
+                        : "text-blueGray-300")
+                    }
+                  ></i>{" "}
+                  Profile
+                </Link>
+              </li>
+            </ul>
+            <hr className="my-4 md:min-w-full" />
+            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Admin
             </h6>
 

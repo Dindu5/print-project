@@ -17,18 +17,18 @@ export default function CardBarChart() {
         ],
         datasets: [
           {
-            label: new Date().getFullYear(),
-            backgroundColor: "#ed64a6",
-            borderColor: "#ed64a6",
+            label: "Delivered",
+            backgroundColor: "rgb(14, 165, 233)",
+            borderColor: "rgb(14, 165, 233)",
             data: [30, 78, 56, 34, 100, 45, 13],
             fill: false,
             barThickness: 8,
           },
           {
-            label: new Date().getFullYear() - 1,
+            label: "Pending",
             fill: false,
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
+            backgroundColor: "rgb(239, 68, 68)",
+            borderColor: "rgb(239, 68, 68)",
             data: [27, 68, 86, 74, 10, 4, 87],
             barThickness: 8,
           },
@@ -108,7 +108,7 @@ export default function CardBarChart() {
                 Performance
               </h6>
               <h2 className="text-blueGray-700 text-xl font-semibold">
-                Total orders
+                Order Status
               </h2>
             </div>
           </div>

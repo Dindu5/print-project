@@ -79,13 +79,13 @@ export const Headers = ({
    */
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink href="/#">About</NavLink>
-      <NavLink href="/#">Pricing</NavLink>
-      <NavLink href="/#">Contact Us</NavLink>
-      <NavLink href="/#" tw="lg:ml-12!">
+      <NavLink to="/create-order">Create Order</NavLink>
+      <NavLink to="/pricing">Pricing</NavLink>
+      <NavLink to="/contact-us">Contact Us</NavLink>
+      <NavLink to="/login" tw="lg:ml-12!">
         Login
       </NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} href="/#">
+      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} to="/signup">
         Sign Up
       </PrimaryLink>
     </NavLinks>,

@@ -4,6 +4,7 @@ import SignUp from "./pages/SignUp";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Admin from "./layouts/Admin.js";
 import Auth from "./layouts/Auth";
+import CreateOrder from "./pages/CreateOrder";
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
         </Route>
         <Route exact path="/login">
           <Login />
+        </Route>
+        <Route exact path="/create-order">
+          <CreateOrder />
         </Route>
         <Route path="/">
           <Landing />
