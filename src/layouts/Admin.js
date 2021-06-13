@@ -13,6 +13,7 @@ import FooterAdmin from "../components/FooterAdmin.js";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import JobHistory from "../pages/JobHistory";
+import OrderForm from "../components/OrderForm";
 
 export default function Admin() {
   return (
@@ -27,6 +28,7 @@ export default function Admin() {
             <Route path="/admin/dashboard" exact component={Dashboard} />
             <Route path="/admin/profile" exact component={Profile} />
             <Route path="/admin/jobhistory" exact component={JobHistory} />
+            <Route path="/admin/create-order" exact component={OrderForm} />
             <Route path="/admin/wallet" exact component={JobHistory} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
