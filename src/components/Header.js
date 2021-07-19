@@ -16,13 +16,13 @@ const Header = tw.header`
   max-w-screen-xl mx-auto
 `;
 
-export const NavLinks = tw.div`inline-block`;
+export const NavLinks = tw.div`block`;
 
 /* hocus: stands for "on hover or focus"
  * hocus:bg-primary-700 will apply the bg-primary-700 class on hover or focus
  */
 export const NavLink = tw(Link)`
-  text-lg my-2 lg:text-sm lg:mx-6 lg:my-0
+  text-lg my-2 lg:text-sm lg:mx-6 lg:my-0 block lg:inline-block
   font-semibold tracking-wide transition duration-300
   pb-1 border-b-2 border-transparent hover:border-primary-500 hocus:text-primary-500
 `;
@@ -47,7 +47,7 @@ export const NavToggle = tw.button`
   lg:hidden z-20 focus:outline-none hocus:text-primary-500 transition duration-300
 `;
 export const MobileNavLinks = motion(styled.div`
-  ${tw`lg:hidden z-10 fixed top-0 inset-x-0 mx-4 my-6 p-8 border text-center rounded-lg text-gray-900 bg-white`}
+  ${tw`lg:hidden z-10 fixed top-0 inset-x-0 mx-4 my-6 p-8 block border text-center rounded-lg text-gray-900 bg-white`}
   ${NavLinks} {
     ${tw`flex flex-col items-center`}
   }
@@ -120,6 +120,7 @@ export const Headers = ({
           initial={{ x: "150%", display: "none" }}
           animate={animation}
           css={collapseBreakpointCss.mobileNavLinks}
+          className="mobile-links"
         >
           {links}
         </MobileNavLinks>
@@ -148,12 +149,12 @@ export default Headers;
 const collapseBreakPointCssMap = {
   sm: {
     mobileNavLinks: tw`sm:hidden`,
-    desktopNavLinks: tw`sm:flex`,
+    desktopNavLinks: tw`sm:block`,
     mobileNavLinksContainer: tw`sm:hidden`,
   },
   md: {
     mobileNavLinks: tw`md:hidden`,
-    desktopNavLinks: tw`md:flex`,
+    desktopNavLinks: tw`md:block`,
     mobileNavLinksContainer: tw`md:hidden`,
   },
   lg: {

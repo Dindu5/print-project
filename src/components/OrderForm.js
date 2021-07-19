@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -139,10 +139,19 @@ const SvgDotPattern1 = tw(
 export const OrderForm = () => {
   const [deliveryOption, setdeliveryOption] = useState("home");
   const [values, setValues] = useState({});
+  const [file, setFile] = useState();
+  const form = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
+    const data = new FormData(form.current);
+    data.append("file", file);
+    for (var value of data.values()) {
+      console.log(value);
+    }
+  };
+  const uploadFile = (e) => {
+    setFile(e.target.files[0]);
   };
 
   const handleInput = (e) => {
@@ -154,7 +163,7 @@ export const OrderForm = () => {
         <FormContainer>
           <div tw="mx-auto max-w-4xl">
             <h2>Initialize Order</h2>
-            <form onSubmit={handleSubmit}>
+            <form ref={form} onSubmit={handleSubmit}>
               <TwoColumn>
                 <Column>
                   <InputContainer>
@@ -190,7 +199,12 @@ export const OrderForm = () => {
                       placeholder="Document Name"
                       required
                     />
-                    <Input type="file" name="file" placeholder="Upload File" />
+                    <Input
+                      type="file"
+                      name="file"
+                      placeholder="Upload File"
+                      onChange={uploadFile}
+                    />
                     <Input
                       type="number"
                       name="no-of-input"
@@ -269,7 +283,7 @@ export const OrderForm = () => {
                         </label>
                       </div>
                     </CheckboxContainer>
-                    {deliveryOption === "home" ? (
+                    {deliveryOption !== "home" ? (
                       <InputContainer>
                         <Label htmlFor="document-pickup">
                           Document Pickup options
