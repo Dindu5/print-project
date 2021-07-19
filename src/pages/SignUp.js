@@ -57,7 +57,7 @@ const IllustrationImage = styled.div`
 export const SignUp = ({
   logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Create an account",
+  headingText = "Create an account with Pog Print",
   // socialButtons = [
   //   {
   //     iconImageSrc: googleIconImageSrc,
@@ -123,7 +123,7 @@ export const SignUp = ({
                 <p tw="mt-8 text-sm text-gray-600 text-center">
                   Already have an account?{" "}
                   <Link
-                    href={signInUrl}
+                    to={signInUrl}
                     tw="border-b border-gray-500 border-dotted"
                   >
                     Sign In
