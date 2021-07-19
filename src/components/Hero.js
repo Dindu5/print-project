@@ -10,6 +10,7 @@ import { Container, ContentWithVerticalPadding } from "./misc/Layout.js";
 import { ReactComponent as CheckboxIcon } from "feather-icons/dist/icons/check-circle.svg";
 import { ReactComponent as QuotesLeftIconBase } from "../images/quotes-l.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "../images/dot-pattern.svg";
+import { useHistory } from "react-router-dom";
 
 const Header = tw(HeaderBase)`max-w-none`;
 const Row = tw.div`flex flex-col lg:flex-row justify-between items-center lg:pt-16 max-w-screen-2xl mx-auto sm:px-8`;
@@ -65,6 +66,7 @@ export const Hero = ({
     customerCompany: "Pog-Print Inc.",
   },
 }) => {
+  let history = useHistory();
   const buttonRoundedCss = buttonRounded && tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
@@ -80,6 +82,9 @@ export const Hero = ({
       </PrimaryLink>
     </NavLinks>,
   ];
+  const movePage = () => {
+    history.push("/create-order");
+  };
   return (
     <>
       <Header links={navLinks} />
@@ -89,7 +94,11 @@ export const Hero = ({
             <TextColumn>
               <Heading>{heading}</Heading>
               <Description>{description}</Description>
-              <PrimaryButton href={primaryButtonUrl} css={buttonRoundedCss}>
+              <PrimaryButton
+                href={primaryButtonUrl}
+                onClick={movePage}
+                css={buttonRoundedCss}
+              >
                 {primaryButtonText}
               </PrimaryButton>
               <FeatureList>

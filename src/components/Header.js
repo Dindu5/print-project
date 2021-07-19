@@ -79,7 +79,7 @@ export const Headers = ({
    */
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink to="/create-order">Create Order</NavLink>
+      <NavLink to="/">Create Order</NavLink>
       <NavLink to="/pricing">Pricing</NavLink>
       <NavLink to="/contact-us">Contact Us</NavLink>
       <NavLink to="/login" tw="lg:ml-12!">
@@ -96,7 +96,7 @@ export const Headers = ({
     collapseBreakPointCssMap[collapseBreakpointClass];
 
   const defaultLogoLink = (
-    <LogoLink href="/">
+    <LogoLink to="/">
       <img src={logo} alt="logo" />
       Pog-Print
     </LogoLink>

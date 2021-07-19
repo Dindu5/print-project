@@ -8,6 +8,7 @@ import { PrimaryButton as PrimaryButtonBase } from "./misc/Button";
 import { Container, ContentWithPaddingXl } from "./misc/Layout.js";
 import { ReactComponent as SvgDecoratorBlob1 } from "../images/svg-decorator-blob-6.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "../images/svg-decorator-blob-7.svg";
+import { useHistory } from "react-router-dom";
 
 const HeaderContainer = tw.div`w-full flex flex-col items-center`;
 const Subheading = tw(SubheadingBase)`mb-4`;
@@ -85,6 +86,7 @@ export const Pricing = ({
     },
   ],
 }) => {
+  let history = useHistory();
   const defaultPlans = [
     {
       durationPrices: ["₦25", "₦15"],
@@ -109,6 +111,9 @@ export const Pricing = ({
   ];
 
   if (!plans) plans = defaultPlans;
+  const movePage = () => {
+    history.push("/login");
+  };
 
   const [activeDurationIndex, setActiveDurationIndex] = useState(0);
 
@@ -154,7 +159,9 @@ export const Pricing = ({
                 ))}
               </PlanFeatures>
               <PlanAction>
-                <BuyNowButton>{primaryButtonText}</BuyNowButton>
+                <BuyNowButton onClick={movePage}>
+                  {primaryButtonText}
+                </BuyNowButton>
               </PlanAction>
             </Plan>
           ))}
