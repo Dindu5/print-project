@@ -34,8 +34,8 @@ const DecoratorBlob2 = tw(
 )`absolute top-0 right-0 w-80 h-80 transform  translate-x-20 -translate-y-64 text-primary-500 opacity-5`;
 
 export const GetStarted = ({
-  subheading = "Interested in Blaze-Print ?",
-  heading = "Integrate Blaze-Print with your organization.",
+  subheading = "Interested in Pog-Print ?",
+  heading = "Integrate Pog-Print with your organization.",
   primaryLinkText = "Get Started",
   primaryLinkUrl = "http://timerse.com",
   secondaryLinkText = "Contact Us",

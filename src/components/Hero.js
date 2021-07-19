@@ -60,9 +60,9 @@ export const Hero = ({
   ],
   testimonial = {
     quote:
-      "Blaze Print offers a wide variety of printing and finishing services, including document vetting, home delivery and more...",
+      "Pog Print offers a wide variety of printing and finishing services, including document vetting, home delivery and more...",
     customerName: "Dindu",
-    customerCompany: "Blaze-Print Inc.",
+    customerCompany: "Pog-Print Inc.",
   },
 }) => {
   const buttonRoundedCss = buttonRounded && tw`rounded-full`;

@@ -62,7 +62,7 @@ export const Features = ({
   cards = null,
   heading = "Amazing Features",
   subheading = "Features",
-  description = "Blaze-Print comes bundled with a lot of features to ensure your printing demands are met.",
+  description = "Pog-Print comes bundled with a lot of features to ensure your printing demands are met.",
 }) => {
   /*
    * This componets has an array of object denoting the cards defined below. Each object in the cards array can have the key (Change it according to your need, you can also add more objects to have more cards in this feature component) or you can directly pass this using the cards prop:
@@ -107,7 +107,7 @@ export const Features = ({
       imageSrc: SimpleIconImage,
       title: "Easy",
       description:
-        "Blazing-Print is ridiculously easy to use, no more configuration headaches",
+        "Pog print is ridiculously easy to use, no more configuration headaches",
     },
   ];
 

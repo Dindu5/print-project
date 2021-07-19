@@ -42,7 +42,7 @@ export const Landing = () => {
       <MainFeature
         heading={
           <>
-            Blaze-Print built by and for{" "}
+            Pog-Print built by and for{" "}
             <HighlightedText>Professionals</HighlightedText>
           </>
         }

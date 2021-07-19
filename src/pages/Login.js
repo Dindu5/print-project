@@ -57,7 +57,7 @@ const IllustrationImage = styled.div`
 export const Login = ({
   logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Sign In To Blaze-Print",
+  headingText = "Sign In To Pog-Print",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
