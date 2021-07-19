@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import "tailwindcss/dist/base.min.css";
 import "./assets/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>
