@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function FooterAdmin() {
   return (
@@ -10,48 +11,32 @@ export default function FooterAdmin() {
             <div className="w-full md:w-4/12 px-4">
               <div className="text-sm text-blueGray-500 font-semibold py-1 text-center md:text-left">
                 Copyright © {new Date().getFullYear()}{" "}
-                <a
-                  href="https://www.creative-tim.com?ref=nr-footer-admin"
+                <Link
+                  to="/"
                   className="text-blueGray-500 hover:text-blueGray-700 text-sm font-semibold py-1"
                 >
                   Pog-Print
-                </a>
+                </Link>
               </div>
             </div>
             <div className="w-full md:w-8/12 px-4">
               <ul className="flex flex-wrap list-none md:justify-end  justify-center">
                 <li>
-                  <a
-                    href="https://www.creative-tim.com?ref=nr-footer-admin"
+                  <Link
+                    to="/terms-of-service"
                     className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3"
                   >
                     Terms of service
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="https://www.creative-tim.com/presentation?ref=nr-footer-admin"
-                    className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3"
-                  >
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="http://blog.creative-tim.com?ref=nr-footer-admin"
+                  <Link
+                    to="/contact"
                     className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3"
                   >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
-                {/* <li>
-                  <a
-                    href="https://github.com/creativetimofficial/notus-react/blob/main/LICENSE.md?ref=nr-footer-admin"
-                    className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3"
-                  >
-                    MIT License
-                  </a>
-                </li> */}
               </ul>
             </div>
           </div>
