@@ -688,6 +688,9 @@ module.exports = {
   },
   variants: {
     accessibility: ["responsive", "focus"],
+    extend: {
+      opacity: ["disabled"],
+    },
     alignContent: ["responsive"],
     alignItems: ["responsive"],
     alignSelf: ["responsive"],

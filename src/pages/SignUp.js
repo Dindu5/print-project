@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "../components/misc/Layout";
 import { Link } from "react-router-dom";
@@ -9,6 +9,8 @@ import illustration from "../images/signup-illustration.svg";
 import logo from "../images/logo.svg";
 // import googleIconImageSrc from "../images/google-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
+// import { css } from "@emotion/react";
+import ClockLoader from "react-spinners/ClockLoader";
 
 const Container = tw(
   ContainerBase
@@ -37,10 +39,25 @@ const FormContainer = tw.div`w-full flex-1 mt-8`;
 // const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
 // const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+`;
+
 const Form = tw.form`mx-auto max-w-xs`;
 const Input = tw.input`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
+const Select = tw.select`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
 const SubmitButton = styled.button`
-  ${tw`mt-5 tracking-wide font-semibold bg-primary-500 text-gray-100 w-full py-4 rounded-lg hover:bg-primary-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none`}
+  ${tw`mt-5 tracking-wide font-semibold bg-primary-500 text-gray-100 w-full py-4 rounded-lg hover:bg-primary-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none disabled:bg-gray-500`}
+  .icon {
+    ${tw`w-6 h-6 -ml-2`}
+  }
+  .text {
+    ${tw`ml-3`}
+  }
+`;
+const SubmitButtonTwo = styled.button`
+  ${tw`mt-5 tracking-wide font-semibold border-primary-200 text-primary-100 w-full py-4 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none disabled:bg-gray-500`}
   .icon {
     ${tw`w-6 h-6 -ml-2`}
   }
@@ -67,21 +84,50 @@ export const SignUp = ({
   // ],
   submitButtonText = "Sign Up",
   SubmitButtonIcon = SignUpIcon,
-  tosUrl = "#",
-  privacyPolicyUrl = "#",
+  // tosUrl = "#",
+  // privacyPolicyUrl = "#",
   signInUrl = "/login",
-}) => (
-  <AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <Link to={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </Link>
-          <MainContent>
-            <Heading className="text-center">{headingText}</Heading>
-            <FormContainer>
-              {/* <SocialButtonsContainer>
+}) => {
+  const [step, setStep] = useState(0);
+  const [isOrganisation, setisOrganisation] = useState(false);
+  const [loading, setloading] = useState(false);
+  const [values, setValues] = useState({});
+  const [organisationValues, setOrganisationValues] = useState({});
+  const change = (event) => {
+    if (event.target.value === "single") {
+      setisOrganisation(false);
+    } else {
+      setisOrganisation(true);
+    }
+  };
+  const handleInput = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  const handleOrgInput = (e) => {
+    setOrganisationValues({
+      ...organisationValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const submitForm = (e) => {
+    e.preventDefault();
+    setloading(true);
+    setTimeout(() => {
+      setloading(false);
+    }, 4000);
+  };
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <Link to={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </Link>
+            <MainContent>
+              <Heading className="text-center">{headingText}</Heading>
+              <FormContainer>
+                {/* <SocialButtonsContainer>
                 {socialButtons.map((socialButton, index) => (
                   <SocialButton key={index} href={socialButton.url}>
                     <span className="iconContainer">
@@ -95,50 +141,143 @@ export const SignUp = ({
                   </SocialButton>
                 ))}
               </SocialButtonsContainer> */}
-              {/* <DividerTextContainer>
+                {/* <DividerTextContainer>
                 <DividerText>Or Sign up with your e-mail</DividerText>
               </DividerTextContainer> */}
-              <Form>
-                <Input type="email" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
-                <Input type="password" placeholder="Confirm Password" />
-                <SubmitButton type="submit">
-                  <SubmitButtonIcon className="icon" />
-                  <span className="text">{submitButtonText}</span>
-                </SubmitButton>
-                <p tw="mt-6 text-xs text-gray-600 text-center">
-                  I agree to abide by treact's{" "}
-                  <a href={tosUrl} tw="border-b border-gray-500 border-dotted">
-                    Terms of Service
-                  </a>{" "}
-                  and its{" "}
-                  <a
-                    href={privacyPolicyUrl}
-                    tw="border-b border-gray-500 border-dotted"
-                  >
-                    Privacy Policy
-                  </a>
-                </p>
+                <Form onSubmit={submitForm}>
+                  {step === 0 ? (
+                    <div>
+                      <p>Basic Details</p>
+                      <Input
+                        type="text"
+                        name="firstName"
+                        placeholder="First Name"
+                        required
+                        onChange={handleInput}
+                      />
+                      <Input
+                        type="text"
+                        name="lastName"
+                        placeholder="Last Name"
+                        required
+                        onChange={handleInput}
+                      />
+                      <Input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        required
+                        onChange={handleInput}
+                      />
+                      <SubmitButton
+                        onClick={() => {
+                          setStep(1);
+                        }}
+                      >
+                        <span className="text">Next</span>
+                      </SubmitButton>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>Choose account type</p>
+                      <Select name="account-type" required onChange={change}>
+                        <option disabled>Choose Account type</option>
+                        <option value="single">Single User</option>
+                        <option value="organization">Organization</option>
+                      </Select>
+                      {isOrganisation && (
+                        <>
+                          <Input
+                            type="text"
+                            name="name"
+                            onChange={handleOrgInput}
+                            placeholder="Organization Name"
+                            required
+                          />
+                          <Input
+                            name="email"
+                            type="email"
+                            onChange={handleOrgInput}
+                            placeholder="Email"
+                            required
+                            autoComplete="off"
+                          />
+                        </>
+                      )}
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        onChange={handleInput}
+                        required
+                        autoComplete="off"
+                      />
+                      <Input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        required
+                      />
+                      <SubmitButtonTwo
+                        className="my-3"
+                        onClick={() => setStep(0)}
+                        disabled={loading}
+                      >
+                        <span className="text">Back</span>
+                      </SubmitButtonTwo>
+                      <SubmitButton type="submit" disabled={loading}>
+                        {!loading && <SubmitButtonIcon className="icon" />}
 
-                <p tw="mt-8 text-sm text-gray-600 text-center">
-                  Already have an account?{" "}
-                  <Link
-                    to={signInUrl}
-                    tw="border-b border-gray-500 border-dotted"
-                  >
-                    Sign In
-                  </Link>
-                </p>
-              </Form>
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-);
+                        <ClockLoader
+                          color="#ffffff"
+                          loading={loading}
+                          css={override}
+                          size={25}
+                        />
+                        <span className="text">
+                          {loading ? "Creating Account..." : "SignUp"}
+                        </span>
+                      </SubmitButton>
+                    </div>
+                  )}
+
+                  {/* <p tw="mt-6 text-xs text-gray-600 text-center">
+                    I agree to abide by {" "}
+                    <a
+                      href={tosUrl}
+                      tw="border-b border-gray-500 border-dotted"
+                    >
+                      Terms of Service
+                    </a>{" "}
+                    and its{" "}
+                    <a
+                      href={privacyPolicyUrl}
+                      tw="border-b border-gray-500 border-dotted"
+                    >
+                      Privacy Policy
+                    </a>
+                  </p> */}
+
+                  <p tw="mt-8 text-sm text-gray-600 text-center">
+                    Already have an account?{" "}
+                    <Link
+                      to={signInUrl}
+                      tw="border-b border-gray-500 border-dotted"
+                    >
+                      Sign In
+                    </Link>
+                  </p>
+                </Form>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  );
+};
 
 export default SignUp;

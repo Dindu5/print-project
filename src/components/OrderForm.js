@@ -1,9 +1,10 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { ReactComponent as SvgDotPatternIcon } from "../images/dot-pattern.svg";
+import docx4js from "docx4js";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -28,6 +29,21 @@ const FormContainer = styled.div`
   }
   textarea {
     max-height: 15rem;
+  }
+`;
+
+const CheckoutContainer = styled.div`
+  background-color: #1a202c;
+  padding: 1.5rem;
+  border-radius: 16px;
+
+  .total-amount {
+    color: #54e0c7;
+  }
+  .detail-b {
+    color: #e5e5e5;
+    opacity: 0.3;
+    border-bottom: 1px solid #f5f5f5;
   }
 `;
 const CheckboxContainer = styled.ul`
@@ -140,18 +156,66 @@ export const OrderForm = () => {
   const [deliveryOption, setdeliveryOption] = useState("home");
   const [values, setValues] = useState({});
   const [file, setFile] = useState();
+  const [pages, setPages] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(1);
   const form = useRef(null);
 
+  const calculateAmount = () => {
+    let amount = 0;
+    amount = pages * 15;
+    if (values.documentVetting) {
+      amount = amount + 50;
+    }
+    if (values.proofReading) {
+      amount = amount + 70;
+    }
+    setTotalAmount(amount);
+  };
+  useEffect(() => {
+    let amount = 0;
+    amount = pages * 15;
+    if (values.documentVetting) {
+      amount = amount + 50;
+    }
+    if (values.proofReading) {
+      amount = amount + 70;
+    }
+    if (deliveryOption === "home") {
+      amount = amount + 100;
+    }
+    setTotalAmount(amount);
+  }, [values, deliveryOption, pages]);
+  const handleCheckbox = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.checked });
+  };
   const handleSubmit = (e) => {
+    calculateAmount();
     e.preventDefault();
+    setTimeout(() => {
+      console.log(totalAmount);
+    }, 1000);
     const data = new FormData(form.current);
     data.append("file", file);
-    for (var value of data.values()) {
-      console.log(value);
-    }
   };
   const uploadFile = (e) => {
     setFile(e.target.files[0]);
+    getPages(e.target.files[0]);
+  };
+  const getPages = (files) => {
+    docx4js
+      .load(files)
+      .then((docx) => {
+        const propsAppRaw = docx.parts["docProps/app.xml"]._data.getContent();
+        const propsApp = new TextDecoder("utf-8").decode(propsAppRaw);
+        const match = propsApp.match(/<Pages>(\d+)<\/Pages>/);
+        if (match && match[1]) {
+          const count = Number(match[1]);
+          setPages(count);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleInput = (e) => {
@@ -173,21 +237,18 @@ export const OrderForm = () => {
                       name="first-name"
                       onChange={handleInput}
                       placeholder="First Name"
-                      required
                     />
                     <Input
                       type="text"
                       name="last-name"
                       onChange={handleInput}
                       placeholder="Last Name"
-                      required
                     />
                     <Input
                       type="email"
                       name="email"
                       onChange={handleInput}
                       placeholder="Email Address"
-                      required
                     />
                   </InputContainer>
                   <InputContainer>
@@ -197,7 +258,6 @@ export const OrderForm = () => {
                       name="document-name"
                       onChange={handleInput}
                       placeholder="Document Name"
-                      required
                     />
                     <Input
                       type="file"
@@ -219,8 +279,9 @@ export const OrderForm = () => {
                       <div className="inputGroup">
                         <input
                           id="option"
-                          name="basic-formatting"
-                          onChange={handleInput}
+                          name="basicFormatting"
+                          checked
+                          onChange={handleCheckbox}
                           type="checkbox"
                         />
                         <label htmlFor="option">
@@ -231,8 +292,8 @@ export const OrderForm = () => {
                       <div className="inputGroup">
                         <input
                           id="option1"
-                          name="document-vetting"
-                          onChange={handleInput}
+                          name="documentVetting"
+                          onChange={handleCheckbox}
                           type="checkbox"
                         />
                         <label htmlFor="option1">
@@ -243,8 +304,8 @@ export const OrderForm = () => {
                       <div className="inputGroup">
                         <input
                           id="option2"
-                          name="proof-reading"
-                          onChange={handleInput}
+                          name="proofReading"
+                          onChange={handleCheckbox}
                           type="checkbox"
                         />
                         <label htmlFor="option2">
@@ -313,13 +374,39 @@ export const OrderForm = () => {
                         </Select>
                         <TextArea
                           id="message-input"
-                          name="message"
+                          name="address"
                           onChange={handleInput}
                           placeholder="Your Address"
                         />
                       </InputContainer>
                     )}
                   </InputContainer>
+                  <CheckoutContainer className="flex mb-5">
+                    <div className="flex-auto p-6">
+                      <div className="flex flex-wrap">
+                        <h1 className="flex-auto text-xl font-semibold">
+                          Total
+                        </h1>
+                        <div className="text-xl font-semibold text-gray-500 total-amount">
+                          ${totalAmount}.00
+                        </div>
+                        <div className="w-full flex-none text-sm font-medium text-gray-200 mt-6 mb-4 detail-b">
+                          Order Summary
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-500">Pages : {pages}</p>
+                      {values.documentVetting && (
+                        <p className="text-sm text-gray-500">
+                          Document Vetting : N 50
+                        </p>
+                      )}
+                      {values.proofReading && (
+                        <p className="text-sm text-gray-500">
+                          Proof Reading : N 70
+                        </p>
+                      )}
+                    </div>
+                  </CheckoutContainer>
                 </Column>
               </TwoColumn>
 
