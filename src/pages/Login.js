@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "../components/misc/Layout";
 import tw from "twin.macro";
@@ -9,6 +9,7 @@ import illustration from "../images/login-illustration.svg";
 import logo from "../images/logo.svg";
 import googleIconImageSrc from "../images/google-icon.png";
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+import ClockLoader from "react-spinners/ClockLoader";
 
 const Container = tw(
   ContainerBase
@@ -20,22 +21,26 @@ const MainContent = tw.div`mt-12 flex flex-col items-center`;
 const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 
-const SocialButtonsContainer = tw.div`flex flex-col items-center`;
-const SocialButton = styled.a`
-  ${tw`w-full max-w-xs font-semibold rounded-lg py-3 border text-gray-900 bg-gray-100 hocus:bg-gray-200 hocus:border-gray-400 flex items-center justify-center transition-all duration-300 focus:outline-none focus:shadow-outline text-sm mt-5 first:mt-0`}
-  .iconContainer {
-    ${tw`bg-white p-2 rounded-full`}
-  }
-  .icon {
-    ${tw`w-4`}
-  }
-  .text {
-    ${tw`ml-4`}
-  }
+const override = css`
+  display: block;
+  margin: 0 auto;
 `;
+// const SocialButtonsContainer = tw.div`flex flex-col items-center`;
+// const SocialButton = styled.a`
+//   ${tw`w-full max-w-xs font-semibold rounded-lg py-3 border text-gray-900 bg-gray-100 hocus:bg-gray-200 hocus:border-gray-400 flex items-center justify-center transition-all duration-300 focus:outline-none focus:shadow-outline text-sm mt-5 first:mt-0`}
+//   .iconContainer {
+//     ${tw`bg-white p-2 rounded-full`}
+//   }
+//   .icon {
+//     ${tw`w-4`}
+//   }
+//   .text {
+//     ${tw`ml-4`}
+//   }
+// `;
 
-const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
-const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
+// const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
+// const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
 
 const Form = tw.form`mx-auto max-w-xs`;
 const Input = tw.input`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
@@ -69,68 +74,102 @@ export const Login = ({
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = "#",
   signupUrl = "/signup",
-}) => (
-  <AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <Link to={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </Link>
-          <MainContent>
-            <Heading>{headingText}</Heading>
-            <FormContainer>
-              <SocialButtonsContainer>
-                {socialButtons.map((socialButton, index) => (
-                  <SocialButton key={index} href={socialButton.url}>
-                    <span className="iconContainer">
-                      <img
-                        src={socialButton.iconImageSrc}
-                        className="icon"
-                        alt=""
-                      />
+}) => {
+  const [loading, setloading] = useState(false);
+  const [values, setValues] = useState({});
+  const handleInput = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  const submitForm = (e) => {
+    e.preventDefault();
+    setloading(true);
+    console.log(values);
+    setTimeout(() => {
+      setloading(false);
+    }, 4000);
+  };
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <Link to={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </Link>
+            <MainContent>
+              <Heading>{headingText}</Heading>
+              <FormContainer>
+                {/* <SocialButtonsContainer>
+                  {socialButtons.map((socialButton, index) => (
+                    <SocialButton key={index} href={socialButton.url}>
+                      <span className="iconContainer">
+                        <img
+                          src={socialButton.iconImageSrc}
+                          className="icon"
+                          alt=""
+                        />
+                      </span>
+                      <span className="text">{socialButton.text}</span>
+                    </SocialButton>
+                  ))}
+                </SocialButtonsContainer>
+                <DividerTextContainer>
+                  <DividerText>Or Sign in with your e-mail</DividerText>
+                </DividerTextContainer> */}
+                <Form onSubmit={submitForm}>
+                  <Input
+                    type="email"
+                    name="identifier"
+                    placeholder="Email"
+                    onChange={handleInput}
+                  />
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleInput}
+                  />
+                  <SubmitButton type="submit" disabled={loading}>
+                    {!loading && <SubmitButtonIcon className="icon" />}
+
+                    <ClockLoader
+                      color="#ffffff"
+                      loading={loading}
+                      css={override}
+                      size={25}
+                    />
+                    <span className="text">
+                      {loading ? "Creating Account..." : "SignUp"}
                     </span>
-                    <span className="text">{socialButton.text}</span>
-                  </SocialButton>
-                ))}
-              </SocialButtonsContainer>
-              <DividerTextContainer>
-                <DividerText>Or Sign in with your e-mail</DividerText>
-              </DividerTextContainer>
-              <Form>
-                <Input type="email" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
-                <SubmitButton type="submit">
-                  <SubmitButtonIcon className="icon" />
-                  <span className="text">{submitButtonText}</span>
-                </SubmitButton>
-              </Form>
-              <p tw="mt-6 text-xs text-gray-600 text-center">
-                <a
-                  href={forgotPasswordUrl}
-                  tw="border-b border-gray-500 border-dotted"
-                >
-                  Forgot Password ?
-                </a>
-              </p>
-              <p tw="mt-8 text-sm text-gray-600 text-center">
-                Dont have an account?{" "}
-                <Link
-                  to={signupUrl}
-                  tw="border-b border-gray-500 border-dotted"
-                >
-                  Sign Up
-                </Link>
-              </p>
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-);
+                  </SubmitButton>
+                </Form>
+                <p tw="mt-6 text-xs text-gray-600 text-center">
+                  <a
+                    href={forgotPasswordUrl}
+                    tw="border-b border-gray-500 border-dotted"
+                  >
+                    Forgot Password ?
+                  </a>
+                </p>
+                <p tw="mt-8 text-sm text-gray-600 text-center">
+                  Dont have an account?{" "}
+                  <Link
+                    to={signupUrl}
+                    tw="border-b border-gray-500 border-dotted"
+                  >
+                    Sign Up
+                  </Link>
+                </p>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  );
+};
 
 export default Login;

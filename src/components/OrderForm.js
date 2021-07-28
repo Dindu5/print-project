@@ -5,6 +5,11 @@ import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { ReactComponent as SvgDotPatternIcon } from "../images/dot-pattern.svg";
 import docx4js from "docx4js";
+import formatNaira from "format-to-naira";
+import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
+import baseUrl from "../api";
+import { toast } from "react-toastify";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -45,6 +50,7 @@ const CheckoutContainer = styled.div`
     opacity: 0.3;
     border-bottom: 1px solid #f5f5f5;
   }
+  .colored-text 
 `;
 const CheckboxContainer = styled.ul`
   .inputGroup {
@@ -139,6 +145,13 @@ const CheckboxContainer = styled.ul`
   }
 `;
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+  > span {
+    color: #000000 !important;
+  }
+`;
 const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
 const Column = tw.div`sm:w-5/12 flex flex-col`;
 const InputContainer = tw.div`relative py-5 mt-6`;
@@ -154,10 +167,37 @@ const SvgDotPattern1 = tw(
 
 export const OrderForm = () => {
   const [deliveryOption, setdeliveryOption] = useState("home");
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({
+    proofReading: false,
+    basicFormatting: true,
+    documentVetting: false,
+  });
   const [file, setFile] = useState();
   const [pages, setPages] = useState(0);
   const [totalAmount, setTotalAmount] = useState(1);
+  const [loading, setloading] = useState(false);
+  const successNotification = () =>
+    toast.success("Print order successfully initiated", {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const errorNotification = () =>
+    toast.error("Something went wrong could you try again", {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   const form = useRef(null);
 
   const calculateAmount = () => {
@@ -185,22 +225,60 @@ export const OrderForm = () => {
     }
     setTotalAmount(amount);
   }, [values, deliveryOption, pages]);
+
   const handleCheckbox = (e) => {
     setValues({ ...values, [e.target.name]: e.target.checked });
   };
-  const handleSubmit = (e) => {
+  // Submit function
+
+  const handleSubmit = async (e) => {
     calculateAmount();
     e.preventDefault();
+    setloading(true);
     setTimeout(() => {
       console.log(totalAmount);
-    }, 1000);
-    const data = new FormData(form.current);
-    data.append("file", file);
+    }, 3000);
+    const fileData = new FormData();
+    fileData.append("files", file);
+    const formattedValues = {
+      ...values,
+      homeDelivery: deliveryOption === "home" ? true : false,
+      noOfPages: pages,
+      documentId: `${Math.random(100)}`,
+    };
+    try {
+      const fileResponse = await axios.post(`${baseUrl}/upload`, fileData);
+      console.log("fileResponse", fileResponse);
+      const newValues = {
+        ...formattedValues,
+        file: fileResponse.data[0],
+        status: "pending",
+      };
+      const response = await axios.post(`${baseUrl}/print-orders`, newValues);
+      console.log(response);
+      successNotification();
+      setloading(false);
+    } catch (err) {
+      if (err.request) {
+        console.log(err.request);
+        console.log(err.response);
+      } else {
+        console.log(err.response);
+      }
+      setloading(false);
+      errorNotification();
+    } finally {
+      setloading(false);
+    }
   };
+
+  // function to upload file
   const uploadFile = (e) => {
     setFile(e.target.files[0]);
     getPages(e.target.files[0]);
   };
+
+  // function to count pages
   const getPages = (files) => {
     docx4js
       .load(files)
@@ -221,6 +299,11 @@ export const OrderForm = () => {
   const handleInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+
+  const handleIntegerInput = (e) => {
+    setValues({ ...values, [e.target.name]: parseInt(e.target.value) });
+  };
+
   return (
     <Container>
       <Content>
@@ -234,13 +317,13 @@ export const OrderForm = () => {
                     <Label htmlFor="name-input">Personal Details</Label>
                     <Input
                       type="text"
-                      name="first-name"
+                      name="firstName"
                       onChange={handleInput}
                       placeholder="First Name"
                     />
                     <Input
                       type="text"
-                      name="last-name"
+                      name="lastName"
                       onChange={handleInput}
                       placeholder="Last Name"
                     />
@@ -255,7 +338,7 @@ export const OrderForm = () => {
                     <Label htmlFor="email-input">Document Details</Label>
                     <Input
                       type="text"
-                      name="document-name"
+                      name="name"
                       onChange={handleInput}
                       placeholder="Document Name"
                     />
@@ -267,8 +350,8 @@ export const OrderForm = () => {
                     />
                     <Input
                       type="number"
-                      name="no-of-input"
-                      onChange={handleInput}
+                      name="noOfCopies"
+                      onChange={handleIntegerInput}
                       placeholder="Number of copies"
                       required
                     />
@@ -349,7 +432,7 @@ export const OrderForm = () => {
                         <Label htmlFor="document-pickup">
                           Document Pickup options
                         </Label>
-                        <Select name="pickup-location" onChange={handleInput}>
+                        <Select name="pickUpLocation" onChange={handleInput}>
                           <option>
                             --- Select the nearest pickup location ---
                           </option>
@@ -374,7 +457,7 @@ export const OrderForm = () => {
                         </Select>
                         <TextArea
                           id="message-input"
-                          name="address"
+                          name="deliveryAddress"
                           onChange={handleInput}
                           placeholder="Your Address"
                         />
@@ -388,21 +471,25 @@ export const OrderForm = () => {
                           Total
                         </h1>
                         <div className="text-xl font-semibold text-gray-500 total-amount">
-                          ${totalAmount}.00
+                          {formatNaira(totalAmount)}.00
                         </div>
                         <div className="w-full flex-none text-sm font-medium text-gray-200 mt-6 mb-4 detail-b">
                           Order Summary
                         </div>
                       </div>
                       <p className="text-sm text-gray-500">Pages : {pages}</p>
+                      <p className="text-sm text-gray-500">
+                        Pages charge<small>(₦15)</small> :{" "}
+                        {formatNaira(pages * 15)}
+                      </p>
                       {values.documentVetting && (
                         <p className="text-sm text-gray-500">
-                          Document Vetting : N 50
+                          Document Vetting : ₦50
                         </p>
                       )}
                       {values.proofReading && (
                         <p className="text-sm text-gray-500">
-                          Proof Reading : N 70
+                          Proof Reading : ₦70
                         </p>
                       )}
                     </div>
@@ -411,7 +498,16 @@ export const OrderForm = () => {
               </TwoColumn>
 
               <SubmitButton type="submit" value="Submit">
-                Create Order
+                {!loading ? (
+                  "Create Order"
+                ) : (
+                  <ClipLoader
+                    color="#54E0C7"
+                    loading={loading}
+                    css={override}
+                    size={20}
+                  />
+                )}
               </SubmitButton>
             </form>
           </div>
