@@ -81,7 +81,7 @@ export const Headers = ({
     <NavLinks key={1}>
       <NavLink to="/">Create Order</NavLink>
       <NavLink to="/pricing">Pricing</NavLink>
-      <NavLink to="/contact-us">Contact Us</NavLink>
+      <NavLink to="/contact">Contact Us</NavLink>
       <NavLink to="/login" tw="lg:ml-12!">
         Login
       </NavLink>

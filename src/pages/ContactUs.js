@@ -20,7 +20,7 @@ function ContactUs() {
   // const buttonRoundedCss = tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
-      <NavLink to="/contact-us">Contact Us</NavLink>
+      <NavLink to="/contact">Contact Us</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
       <NavLink to="/auth/login" tw="lg:ml-12!">
