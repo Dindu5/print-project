@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -11,6 +11,7 @@ import { ReactComponent as CheckboxIcon } from "feather-icons/dist/icons/check-c
 import { ReactComponent as QuotesLeftIconBase } from "../images/quotes-l.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "../images/dot-pattern.svg";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const Header = tw(HeaderBase)`max-w-none`;
 const Row = tw.div`flex flex-col lg:flex-row justify-between items-center lg:pt-16 max-w-screen-2xl mx-auto sm:px-8`;
@@ -67,19 +68,29 @@ export const Hero = ({
   },
 }) => {
   let history = useHistory();
+  const { user } = useContext(UserContext);
   const buttonRoundedCss = buttonRounded && tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
       <NavLink to="/contact-us">Contact Us</NavLink>
     </NavLinks>,
-    <NavLinks key={2}>
-      <NavLink to="/auth/login" tw="lg:ml-12!">
-        Login
-      </NavLink>
 
-      <PrimaryLink to="/auth/signup" css={buttonRoundedCss}>
-        Sign Up
-      </PrimaryLink>
+    <NavLinks key={2}>
+      {user.authenticated ? (
+        <PrimaryLink to="/admin/dashboard" css={buttonRoundedCss}>
+          Go to dashboard
+        </PrimaryLink>
+      ) : (
+        <>
+          <NavLink to="/auth/login" tw="lg:ml-12!">
+            Login
+          </NavLink>
+
+          <PrimaryLink to="/auth/signup" css={buttonRoundedCss}>
+            Sign Up
+          </PrimaryLink>
+        </>
+      )}
     </NavLinks>,
   ];
   const movePage = () => {

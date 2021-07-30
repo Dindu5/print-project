@@ -10,6 +10,10 @@ import logo from "../images/logo.svg";
 import googleIconImageSrc from "../images/google-icon.png";
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
 import ClockLoader from "react-spinners/ClockLoader";
+import axios from "axios";
+import baseUrl from "../api";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const Container = tw(
   ContainerBase
@@ -18,7 +22,7 @@ const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
-const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
+const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold pb-20`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 
 const override = css`
@@ -70,7 +74,6 @@ export const Login = ({
       url: "https://google.com",
     },
   ],
-  submitButtonText = "Sign In",
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = "#",
   signupUrl = "/signup",
@@ -80,13 +83,51 @@ export const Login = ({
   const handleInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-  const submitForm = (e) => {
+  const history = useHistory();
+
+  const successNotification = (msg) =>
+    toast.success(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const errorNotification = (msg) =>
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  const submitForm = async (e) => {
     e.preventDefault();
     setloading(true);
-    console.log(values);
-    setTimeout(() => {
+    delete axios.defaults.headers.common.Authorization;
+    try {
+      const loginUrl = `${baseUrl}/auth/local`;
+      const loginResponse = await axios.post(loginUrl, values);
+      const AuthToken = `Bearer ${loginResponse.data.jwt}`;
+      localStorage.setItem("AuthToken", AuthToken);
+      axios.defaults.headers.common.Authorization = AuthToken;
+      console.log(loginResponse);
+      const welcomeMsg = `Login Successful, welcome ${loginResponse.data.user.firstName}`;
+      successNotification(welcomeMsg);
       setloading(false);
-    }, 4000);
+      setValues({});
+      history.push("/admin/dashboard");
+    } catch (error) {
+      console.log(error.response);
+      const errorMsg = `${error.response.data.message[0].messages[0].message}`;
+      errorNotification(errorMsg);
+      setloading(false);
+    }
   };
   return (
     <AnimationRevealPage>
@@ -98,7 +139,7 @@ export const Login = ({
             </Link>
             <MainContent>
               <Heading>{headingText}</Heading>
-              <FormContainer>
+              <FormContainer className="pb-10">
                 {/* <SocialButtonsContainer>
                   {socialButtons.map((socialButton, index) => (
                     <SocialButton key={index} href={socialButton.url}>

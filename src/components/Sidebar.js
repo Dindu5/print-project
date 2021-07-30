@@ -11,20 +11,13 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   console.log(user);
   const title = () => {
-    switch (user) {
-      case "single":
+    switch (user.data.isOrganisation) {
+      case false:
         return "User";
-
         break;
-      case "organization":
+      case true:
         return "Organization";
-
         break;
-      case "admin":
-        return "Admin";
-
-        break;
-
       default:
         return "User";
         break;
@@ -47,7 +40,7 @@ export default function Sidebar() {
             className="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
             to="/"
           >
-            Print-Blaze
+            Pog-Print
           </Link>
           {/* User */}
           <ul className="md:hidden items-center flex flex-wrap list-none">
@@ -73,7 +66,7 @@ export default function Sidebar() {
                     className="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
                     to="/"
                   >
-                    Print-Blaze
+                    Pog-Print
                   </Link>
                 </div>
                 <div className="w-6/12 flex justify-end">
@@ -102,7 +95,7 @@ export default function Sidebar() {
             <hr className="my-4 md:min-w-full" />
             {/* Heading */}
             <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              {title()}
+              User
             </h6>
             {/* Navigation */}
 
@@ -141,7 +134,7 @@ export default function Sidebar() {
                 >
                   <i
                     className={
-                      "fas fa-tools mr-2 text-sm " +
+                      "fas fa-history mr-2 text-sm " +
                       (window.location.href.indexOf("/admin/jobhistory") !== -1
                         ? "opacity-75"
                         : "text-blueGray-300")
@@ -163,7 +156,7 @@ export default function Sidebar() {
                 >
                   <i
                     className={
-                      "fas fa-table mr-2 text-sm " +
+                      "fas fa-wallet mr-2 text-sm " +
                       (window.location.href.indexOf("/admin/wallet") !== -1
                         ? "opacity-75"
                         : "text-blueGray-300")
@@ -185,7 +178,7 @@ export default function Sidebar() {
                 >
                   <i
                     className={
-                      "fas fa-map-marked mr-2 text-sm " +
+                      "fas fa-print mr-2 text-sm " +
                       (window.location.href.indexOf("/admin/create-order") !==
                       -1
                         ? "opacity-75"
@@ -193,34 +186,6 @@ export default function Sidebar() {
                     }
                   ></i>{" "}
                   Create Order
-                </Link>
-              </li>
-            </ul>
-            <hr className="my-4 md:min-w-full" />
-            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Organization
-            </h6>
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (window.location.href.indexOf("/admin/users") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                  to="/admin/users"
-                >
-                  <i
-                    className={
-                      "fas fa-map-marked mr-2 text-sm " +
-                      (window.location.href.indexOf("/admin/users") !== -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
-                    }
-                  ></i>{" "}
-                  Manage Users
                 </Link>
               </li>
               <li className="items-center">
@@ -235,7 +200,7 @@ export default function Sidebar() {
                 >
                   <i
                     className={
-                      "fas fa-map-marked mr-2 text-sm " +
+                      "fas fa-address-card mr-2 text-sm " +
                       (window.location.href.indexOf("/admin/profile") !== -1
                         ? "opacity-75"
                         : "text-blueGray-300")
@@ -245,57 +210,166 @@ export default function Sidebar() {
                 </Link>
               </li>
             </ul>
-            <hr className="my-4 md:min-w-full" />
-            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Admin
-            </h6>
 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (window.location.href.indexOf("/admin/manage-orders") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                  to="/admin/manage-orders"
-                >
-                  <i
-                    className={
-                      "fas fa-map-marked mr-2 text-sm " +
-                      (window.location.href.indexOf("/admin/manage-orders") !==
-                      -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
-                    }
-                  ></i>{" "}
-                  Manage Orders
-                </Link>
-              </li>
-              <li className="items-center">
-                <Link
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (window.location.href.indexOf("/admin/manage-users") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                  to="/admin/manage-users"
-                >
-                  <i
-                    className={
-                      "fas fa-map-marked mr-2 text-sm " +
-                      (window.location.href.indexOf("/admin/manage-users") !==
-                      -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
-                    }
-                  ></i>{" "}
-                  Manage Users
-                </Link>
-              </li>
-            </ul>
+            {user.data.isOrganisation && (
+              <>
+                <hr className="my-4 md:min-w-full" />
+                <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+                  Organization
+                </h6>
+
+                <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf("/admin/users") !== -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/users"
+                    >
+                      <i
+                        className={
+                          "fas fa-users mr-2 text-sm " +
+                          (window.location.href.indexOf("/admin/users") !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Manage Users
+                    </Link>
+                  </li>
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf("/admin/profile") !== -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/profile"
+                    >
+                      <i
+                        className={
+                          "fas fa-address-card mr-2 text-sm " +
+                          (window.location.href.indexOf("/admin/profile") !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Account
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            )}
+
+            {user.data.isAdmin && (
+              <>
+                <hr className="my-4 md:min-w-full" />
+                <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+                  Admin
+                </h6>
+
+                <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf(
+                          "/admin/manage-orders"
+                        ) !== -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/manage-orders"
+                    >
+                      <i
+                        className={
+                          "fas fa-tasks mr-2 text-sm " +
+                          (window.location.href.indexOf(
+                            "/admin/manage-orders"
+                          ) !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Manage Orders
+                    </Link>
+                  </li>
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf("/admin/manage-users") !==
+                        -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/manage-users"
+                    >
+                      <i
+                        className={
+                          "fas fa-building mr-2 text-sm " +
+                          (window.location.href.indexOf(
+                            "/admin/manage-users"
+                          ) !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Manage Organizations
+                    </Link>
+                  </li>
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf("/admin/manage-users") !==
+                        -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/manage-users"
+                    >
+                      <i
+                        className={
+                          "fas fa-users mr-2 text-sm " +
+                          (window.location.href.indexOf(
+                            "/admin/manage-users"
+                          ) !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Manage Users
+                    </Link>
+                  </li>
+                  <li className="items-center">
+                    <Link
+                      className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (window.location.href.indexOf("/admin/profile") !== -1
+                          ? "text-lightBlue-500 hover:text-lightBlue-600"
+                          : "text-blueGray-700 hover:text-blueGray-500")
+                      }
+                      to="/admin/profile"
+                    >
+                      <i
+                        className={
+                          "fas fa-address-card mr-2 text-sm " +
+                          (window.location.href.indexOf("/admin/profile") !== -1
+                            ? "opacity-75"
+                            : "text-blueGray-300")
+                        }
+                      ></i>{" "}
+                      Profile
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </nav>

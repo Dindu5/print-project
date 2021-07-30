@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.3.0",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@headlessui/react": "^1.2.0",
+    "@heroicons/react": "^1.0.3",
     "@owaiswiz/use-in-view": "^1.0.16",
     "@popperjs/core": "2.9.1",
     "@testing-library/jest-dom": "^5.11.4",

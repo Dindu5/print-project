@@ -5,10 +5,22 @@ import reportWebVitals from "./reportWebVitals";
 import "tailwindcss/dist/base.min.css";
 import "./assets/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import UserContextProvider from "./context/UserContext";
+import OrganisationContextProvider from "./context/OrganisationContext";
+import WalletContextProvider from "./context/WalletContext";
+import PrintOrderContextProvider from "./context/PrintOrderContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <UserContextProvider>
+      <OrganisationContextProvider>
+        <WalletContextProvider>
+          <PrintOrderContextProvider>
+            <App />
+          </PrintOrderContextProvider>
+        </WalletContextProvider>
+      </OrganisationContextProvider>
+    </UserContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

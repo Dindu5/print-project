@@ -235,9 +235,6 @@ export const OrderForm = () => {
     calculateAmount();
     e.preventDefault();
     setloading(true);
-    setTimeout(() => {
-      console.log(totalAmount);
-    }, 3000);
     const fileData = new FormData();
     fileData.append("files", file);
     const formattedValues = {
@@ -253,6 +250,7 @@ export const OrderForm = () => {
         ...formattedValues,
         file: fileResponse.data[0],
         status: "pending",
+        amount: totalAmount,
       };
       const response = await axios.post(`${baseUrl}/print-orders`, newValues);
       console.log(response);

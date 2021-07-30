@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { Container as ContainerBase } from "./misc/Layout.js";
@@ -7,6 +7,7 @@ import { ReactComponent as FacebookIcon } from "../images/facebook-icon.svg";
 import { ReactComponent as TwitterIcon } from "../images/twitter-icon.svg";
 import { ReactComponent as YoutubeIcon } from "../images/youtube-icon.svg";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const Container = tw(ContainerBase)`bg-gray-900 text-gray-100 -mx-8 -mb-8`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -32,6 +33,8 @@ const SocialLink = styled.a`
 
 const CopyrightText = tw.p`text-center mt-10 font-medium tracking-wide text-sm text-gray-600`;
 export const Footer = () => {
+  const { user } = useContext(UserContext);
+
   return (
     <Container>
       <Content>
@@ -41,10 +44,18 @@ export const Footer = () => {
             <LogoText>Pog-Print</LogoText>
           </LogoContainer>
           <LinksContainer>
-            <RouterLink to="/">Home</RouterLink>
+            {user.authenticated ? (
+              <RouterLink to="/admin/dashboard">Dashboard</RouterLink>
+            ) : (
+              <RouterLink to="/">Home</RouterLink>
+            )}
             <RouterLink to="/contact">Contact Us</RouterLink>
-            <RouterLink to="/create-order">Create Order</RouterLink>
-            <RouterLink to="/login">Login</RouterLink>
+            {user.authenticated ? (
+              <RouterLink to="/admin/create-order">Create Order</RouterLink>
+            ) : (
+              <RouterLink to="/create-order">Create Order</RouterLink>
+            )}
+            {!user.authenticated && <RouterLink to="/login">Login</RouterLink>}
           </LinksContainer>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">

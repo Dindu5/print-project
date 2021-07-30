@@ -14,12 +14,11 @@ import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import JobHistory from "../pages/JobHistory";
 import OrderForm from "../components/OrderForm";
-import UserContextProvider from "../context/UserContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function Admin() {
   return (
-    <UserContextProvider>
+    <div>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
@@ -49,6 +48,6 @@ export default function Admin() {
           <FooterAdmin />
         </div>
       </div>
-    </UserContextProvider>
+    </div>
   );
 }

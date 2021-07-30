@@ -11,6 +11,10 @@ import logo from "../images/logo.svg";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
 // import { css } from "@emotion/react";
 import ClockLoader from "react-spinners/ClockLoader";
+import axios from "axios";
+import baseUrl from "../api";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const Container = tw(
   ContainerBase
@@ -82,7 +86,6 @@ export const SignUp = ({
   //     url: "https://google.com",
   //   },
   // ],
-  submitButtonText = "Sign Up",
   SubmitButtonIcon = SignUpIcon,
   // tosUrl = "#",
   // privacyPolicyUrl = "#",
@@ -93,6 +96,7 @@ export const SignUp = ({
   const [loading, setloading] = useState(false);
   const [values, setValues] = useState({});
   const [organisationValues, setOrganisationValues] = useState({});
+  const history = useHistory();
   const change = (event) => {
     if (event.target.value === "single") {
       setisOrganisation(false);
@@ -109,12 +113,89 @@ export const SignUp = ({
       [e.target.name]: e.target.value,
     });
   };
-  const submitForm = (e) => {
+
+  const successNotification = (msg) =>
+    toast.success(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const errorNotification = (msg) =>
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  const infoNotification = (msg) =>
+    toast.warn(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  // Submit fuunction
+  const submitForm = async (e) => {
     e.preventDefault();
     setloading(true);
-    setTimeout(() => {
+    try {
+      const signupUrl = `${baseUrl}/auth/local/register`;
+      const organisationUrl = `${baseUrl}/organisations`;
+      const walletUrl = `${baseUrl}/wallets`;
+
+      const walletValues = {
+        amount: parseInt(0),
+        walletId: `${Math.random(1000)}`,
+      };
+      const walletResponse = await axios.post(walletUrl, walletValues);
+      console.log(walletResponse);
+
+      let organizationResponse;
+      if (isOrganisation) {
+        const orgValues = {
+          ...organisationValues,
+          organisationId: `${Math.random(200)}`,
+          wallet: walletResponse.data.id,
+        };
+        organizationResponse = await axios.post(organisationUrl, orgValues);
+      }
+      console.log(organizationResponse);
+      const modifiedValues = {
+        ...values,
+        username: `${values.firstName} ${values.lastName}`,
+        isOrganisation,
+        organisation: isOrganisation ? organizationResponse.data : {},
+        wallet: isOrganisation ? {} : walletResponse.data.id,
+      };
+      const userResponse = await axios.post(signupUrl, modifiedValues);
+      console.log(userResponse);
+      successNotification("Your account has been created successfully");
       setloading(false);
-    }, 4000);
+      setValues({});
+      history.push("/login");
+    } catch (error) {
+      console.log(error.response);
+      errorNotification(
+        "Something went wrong while creating your account, please try again"
+      );
+      setTimeout(() => {
+        infoNotification(error.response.data.message[0].messages[0].message);
+      }, 1000);
+
+      setloading(false);
+    }
   };
   return (
     <AnimationRevealPage>

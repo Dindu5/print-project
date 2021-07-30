@@ -6,7 +6,10 @@ export { UserContext };
 
 function UserContextProvider(props) {
   const { children } = props;
-  const [user, setUser] = useState("single");
+  const [user, setUser] = useState({
+    authenticated: false,
+    data: {},
+  });
 
   return (
     <UserContext.Provider

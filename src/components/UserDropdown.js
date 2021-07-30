@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createPopper } from "@popperjs/core";
+import { UserContext } from "../context/UserContext";
+import { WalletContext } from "../context/WalletContext";
+import { PrintOrderContext } from "../context/PrintOrderContext";
+import { OrganisationContext } from "../context/OrganisationContext";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const UserDropdown = () => {
   // dropdown props
@@ -15,6 +21,35 @@ const UserDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+  const { user, setUser } = useContext(UserContext);
+  const { setWallet } = useContext(WalletContext);
+  const { setPrintOrders } = useContext(PrintOrderContext);
+  const { setOrganisation } = useContext(OrganisationContext);
+
+  const history = useHistory();
+
+  const successNotification = (msg) =>
+    toast.success(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const logout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("AuthToken");
+    setUser();
+    setPrintOrders([]);
+    setWallet({});
+    setOrganisation({});
+    successNotification("Sign out successful");
+    history.push("/");
+  };
+
   return (
     <>
       <a
@@ -46,29 +81,14 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
           onClick={(e) => e.preventDefault()}
         >
-          Action
-        </a>
-        <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Another action
-        </a>
-        <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Something else here
+          Logged In as{" "}
+          {user.data
+            ? user.data.username || "Unknown User"
+            : "Unidentified User"}
         </a>
         <div className="h-0 my-2 border border-solid border-blueGray-100" />
         <a
@@ -76,9 +96,9 @@ const UserDropdown = () => {
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => logout()}
         >
-          Seprated link
+          Logout
         </a>
       </div>
     </>
