@@ -13,6 +13,7 @@ import FooterAdmin from "../components/FooterAdmin.js";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import JobHistory from "../pages/JobHistory";
+import JobDetails from "../pages/JobDetails";
 import Account from "../pages/Account";
 import AdminOrder from "../components/AdminOrder";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -36,10 +37,11 @@ export default function Admin() {
               component={Dashboard}
             />
             <ProtectedRoute path="/admin/profile" exact component={Profile} />
+            <ProtectedRoute path="/admin/jobs" exact component={JobHistory} />
             <ProtectedRoute
-              path="/admin/jobhistory"
+              path="/admin/jobs/:id"
               exact
-              component={JobHistory}
+              component={JobDetails}
             />
             <ProtectedRoute
               path="/admin/create-order"

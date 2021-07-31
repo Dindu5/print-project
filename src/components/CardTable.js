@@ -6,7 +6,7 @@ import Pagination from "./Pagination";
 
 import TableDropdown from "./TableDropdown.js";
 
-export default function CardTable({ color, printOrders }) {
+export default function CardTable({ color, printOrders, title }) {
   const getWidth = (status) => {
     let width = "";
     switch (status) {
@@ -41,7 +41,7 @@ export default function CardTable({ color, printOrders }) {
     <>
       <div
         className={
-          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
+          "relative flex flex-col min-w-0 break-words w-full shadow-lg rounded " +
           (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
         }
       >
@@ -54,7 +54,7 @@ export default function CardTable({ color, printOrders }) {
                   (color === "light" ? "text-blueGray-700" : "text-white")
                 }
               >
-                All Print Orders
+                {title}
               </h3>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function CardTable({ color, printOrders }) {
                       </div>
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                      <TableDropdown />
+                      <TableDropdown id={order.id} />
                     </td>
                   </tr>
                 );

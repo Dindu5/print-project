@@ -1,7 +1,9 @@
 import React from "react";
 import { createPopper } from "@popperjs/core";
+import { useHistory } from "react-router-dom";
 
-const NotificationDropdown = () => {
+const NotificationDropdown = ({ id }) => {
+  const history = useHistory();
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef();
@@ -40,27 +42,38 @@ const NotificationDropdown = () => {
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            history.push(`/admin/jobs/${id}`);
+          }}
         >
-          Action
+          <i class="fas fa-binoculars mr-4"></i>
+          View
         </a>
         <a
           href="#pablo"
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            history.push(`/admin/jobs/${id}`);
+          }}
         >
-          Another action
+          <i class="fas fa-user-edit mr-4"></i>
+          Edit
         </a>
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transperent text-red-500"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+          }}
         >
-          Something else here
+          <i className="fas fa-trash mr-4"></i>
+          Delete
         </a>
       </div>
     </>

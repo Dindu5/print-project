@@ -39,20 +39,20 @@ export default function HeaderStats() {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="PENDING ORDERS"
+                  statSubtitle="PENDING"
                   statTitle={`${pendingOrders.length}` || "0"}
                   statPercentColor="text-emerald-500"
-                  statDescripiron="Since last month"
+                  statDescripiron="Orders"
                   statIconName="far fa-chart-bar"
                   statIconColor="bg-red-500"
                 />
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="Total Orders"
+                  statSubtitle="Total"
                   statTitle={`${printOrders.length}` || "0"}
                   statPercentColor="text-red-500"
-                  statDescripiron="Since last week"
+                  statDescripiron="Orders"
                   statIconName="fas fa-chart-pie"
                   statIconColor="bg-orange-500"
                 />
@@ -62,7 +62,7 @@ export default function HeaderStats() {
                   statSubtitle={
                     user.data.isOrganisation || user.data.isAdmin
                       ? "Users"
-                      : "Completed Orders"
+                      : "Completed"
                   }
                   statTitle={
                     user.data.isOrganisation || user.data.isAdmin
@@ -70,17 +70,21 @@ export default function HeaderStats() {
                       : `${completedOrders}`
                   }
                   statPercentColor="text-orange-500"
-                  statDescripiron="Since yesterday"
+                  statDescripiron={
+                    user.data.isOrganisation || user.data.isAdmin
+                      ? "Organization"
+                      : "Orders"
+                  }
                   statIconName="fas fa-users"
                   statIconColor="bg-pink-500"
                 />
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="WALLET BALANCE"
+                  statSubtitle="WALLET"
                   statTitle={`${wallet.amount ? wallet.amount : 0}PP`}
                   statPercentColor="text-emerald-500"
-                  statDescripiron="Since last month"
+                  statDescripiron="Balance"
                   statIconName="fas fa-money-check-alt"
                   statIconColor="bg-lightBlue-500"
                 />
