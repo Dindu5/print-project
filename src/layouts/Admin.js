@@ -13,7 +13,8 @@ import FooterAdmin from "../components/FooterAdmin.js";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import JobHistory from "../pages/JobHistory";
-import OrderForm from "../components/OrderForm";
+import Account from "../pages/Account";
+import AdminOrder from "../components/AdminOrder";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function Admin() {
@@ -24,7 +25,10 @@ export default function Admin() {
         <AdminNavbar />
         {/* Header */}
         <HeaderStats />
-        <div className="px-4 md:px-10 mx-auto w-full -m-24">
+        <div
+          style={{ minHeight: "72vh" }}
+          className="flex flex-col justify-between px-4 md:px-10 mx-auto w-full -m-24"
+        >
           <Switch>
             <ProtectedRoute
               path="/admin/dashboard"
@@ -40,9 +44,10 @@ export default function Admin() {
             <ProtectedRoute
               path="/admin/create-order"
               exact
-              component={OrderForm}
+              component={AdminOrder}
             />
             <ProtectedRoute path="/admin/wallet" exact component={JobHistory} />
+            <ProtectedRoute path="/admin/account" exact component={Account} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
           <FooterAdmin />

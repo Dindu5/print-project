@@ -127,11 +127,8 @@ export default function CardTable({ color, printOrders }) {
             <tbody>
               {printOrders.map((order) => {
                 return (
-                  <tr>
-                    <th
-                      key={order.id}
-                      className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
-                    >
+                  <tr key={order.id}>
+                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                       <img
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hjxbQj0i-I3pfkx4iKiGbBGdRfTOZ1mhZg&usqp=CAU"
                         className="h-8 w-8 bg-white rounded-full border"
@@ -242,5 +239,5 @@ CardTable.defaultProps = {
 
 CardTable.propTypes = {
   color: PropTypes.oneOf(["light", "dark"]),
-  printOrders: PropTypes.object,
+  printOrders: PropTypes.array,
 };

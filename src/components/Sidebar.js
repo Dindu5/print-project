@@ -244,16 +244,16 @@ export default function Sidebar() {
                     <Link
                       className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (window.location.href.indexOf("/admin/profile") !== -1
+                        (window.location.href.indexOf("/admin/account") !== -1
                           ? "text-lightBlue-500 hover:text-lightBlue-600"
                           : "text-blueGray-700 hover:text-blueGray-500")
                       }
-                      to="/admin/profile"
+                      to="/admin/account"
                     >
                       <i
                         className={
                           "fas fa-address-card mr-2 text-sm " +
-                          (window.location.href.indexOf("/admin/profile") !== -1
+                          (window.location.href.indexOf("/admin/account") !== -1
                             ? "opacity-75"
                             : "text-blueGray-300")
                         }
