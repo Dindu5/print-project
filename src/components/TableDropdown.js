@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createPopper } from "@popperjs/core";
-import { useHistory } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 const NotificationDropdown = ({ id }) => {
-  const history = useHistory();
+  const { user } = useContext(UserContext);
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef();
@@ -37,34 +38,29 @@ const NotificationDropdown = ({ id }) => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
+        {user.data.isAdmin ? (
+          <Link
+            to={`/admin/jobs/${id}`}
+            className={
+              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            }
+          >
+            <i className="fas fa-user-edit mr-3"></i>
+            Update Order
+          </Link>
+        ) : (
+          <Link
+            to={`/admin/jobs/${id}`}
+            className={
+              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            }
+          >
+            <i className="fas fa-binoculars mr-3"></i>
+            View Order
+          </Link>
+        )}
         <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => {
-            e.preventDefault();
-            history.push(`/admin/jobs/${id}`);
-          }}
-        >
-          <i class="fas fa-binoculars mr-4"></i>
-          View
-        </a>
-        <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => {
-            e.preventDefault();
-            history.push(`/admin/jobs/${id}`);
-          }}
-        >
-          <i class="fas fa-user-edit mr-4"></i>
-          Edit
-        </a>
-        <a
-          href="#pablo"
+          href="#delete"
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transperent text-red-500"
           }
@@ -73,7 +69,7 @@ const NotificationDropdown = ({ id }) => {
           }}
         >
           <i className="fas fa-trash mr-4"></i>
-          Delete
+          Delete Order
         </a>
       </div>
     </>

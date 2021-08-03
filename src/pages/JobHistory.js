@@ -6,6 +6,19 @@ export default function Jobhistory() {
   const { printOrders } = useContext(PrintOrderContext);
   const [openTab, setOpenTab] = useState(1);
 
+  const completedOrders = () => {
+    const orders = printOrders.filter((order) => {
+      return order.status === "pending";
+    });
+    return orders;
+  };
+  const deliveredOrders = () => {
+    const orders = printOrders.filter((order) => {
+      return order.status === "delivered";
+    });
+    return orders;
+  };
+
   return (
     <>
       <div className="mt-4 px-4 z-10">
@@ -69,7 +82,7 @@ export default function Jobhistory() {
                   href="#link3"
                   role="tablist"
                 >
-                  Completed
+                  Delivered
                 </a>
               </li>
             </ul>
@@ -91,7 +104,7 @@ export default function Jobhistory() {
                   >
                     <CardTable
                       title="Pending Print Orders"
-                      printOrders={printOrders}
+                      printOrders={completedOrders()}
                     />
                   </div>
                   <div
@@ -99,8 +112,8 @@ export default function Jobhistory() {
                     id="link3"
                   >
                     <CardTable
-                      title="Completed Print Orders"
-                      printOrders={printOrders}
+                      title="Delivered Print Orders"
+                      printOrders={deliveredOrders()}
                     />
                   </div>
                 </div>

@@ -86,7 +86,7 @@ const CheckboxContainer = styled.ul`
       color: #fff;
 
       &:before {
-        transform: translate(-50%, -50%) scale3d(56, 56, 1);
+        transform: translate(-50%, -100%) scale3d(65, 65, 1);
         opacity: 1;
       }
 

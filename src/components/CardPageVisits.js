@@ -60,7 +60,7 @@ export default function CardPageVisits() {
               </tr>
             </thead>
             <tbody>
-              {printOrders.map((order) => {
+              {printOrders.slice(0, 10).map((order) => {
                 return (
                   <tr key={order.id}>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">

@@ -47,7 +47,8 @@ function App() {
             authenticated: true,
             data: userResponse.data,
           });
-          if (userResponse.data.isOrganisation) {
+          console.log(userResponse.data);
+          if (userResponse.data.organisation !== null) {
             const organisationResponse = await axios.get(
               `${baseUrl}/organisations/${userResponse.data.organisation}`
             );
@@ -57,16 +58,23 @@ function App() {
             );
             setWallet(walletResponse.data);
           }
-          if (!userResponse.data.isOrganisation) {
+          if (userResponse.data.organisation === null) {
             const walletResponse = await axios.get(
-              `${baseUrl}/wallets/${userResponse.data.wallet.id}`
+              `${baseUrl}/wallets/${userResponse.data.wallet}`
             );
             setWallet(walletResponse.data);
           }
-          const printOrderResponse = await axios.get(
-            `${baseUrl}/print-orders?_sort=created_at:DESC&&users_permissions_user=${userResponse.data.id}`
-          );
-          setPrintOrders(printOrderResponse.data);
+          if (!userResponse.data.isAdmin) {
+            const printOrderResponse = await axios.get(
+              `${baseUrl}/print-orders?_sort=created_at:DESC&&users_permissions_user=${userResponse.data.id}`
+            );
+            setPrintOrders(printOrderResponse.data);
+          } else {
+            const printOrderResponse = await axios.get(
+              `${baseUrl}/print-orders`
+            );
+            setPrintOrders(printOrderResponse.data);
+          }
         } catch (error) {
           errorNotification("Could not load user details, please try again");
         }
@@ -75,7 +83,6 @@ function App() {
     }
   }, [AuthToken, setUser, setOrganisation, setPrintOrders, setWallet]);
 
-  console.log(AuthToken);
   return (
     <Router>
       <Switch>

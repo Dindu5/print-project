@@ -17,6 +17,7 @@ import JobDetails from "../pages/JobDetails";
 import Account from "../pages/Account";
 import AdminOrder from "../components/AdminOrder";
 import ProtectedRoute from "../components/ProtectedRoute";
+import WalletPage from "../pages/WalletPage";
 
 export default function Admin() {
   return (
@@ -48,7 +49,8 @@ export default function Admin() {
               exact
               component={AdminOrder}
             />
-            <ProtectedRoute path="/admin/wallet" exact component={JobHistory} />
+            <ProtectedRoute path="/admin/wallet" exact component={WalletPage} />
+            <ProtectedRoute path="/admin/account" exact component={Account} />
             <ProtectedRoute path="/admin/account" exact component={Account} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>

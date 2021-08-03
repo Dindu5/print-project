@@ -1,12 +1,47 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 import Pagination from "./Pagination";
+import baseUrl from "./api";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 // components
 
 import TableDropdown from "./TableDropdown.js";
 
 export default function CardTable({ color, printOrders, title }) {
+  const [allOrganisations, setAllOrganisations] = useState([]);
+  const errorNotification = (msg) =>
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  useEffect(() => {
+    const AuthToken = localStorage.getItem("AuthToken");
+    if (AuthToken) {
+      axios.defaults.headers.common.Authorization = AuthToken;
+      async function getData() {
+        try {
+          const organisationResponse = await axios.get(
+            `${baseUrl}/organisations/`
+          );
+          setAllOrganisations(organisationResponse.data);
+        } catch (error) {
+          errorNotification(
+            "Could not get organisations data, please try again"
+          );
+        }
+      }
+      getData();
+    }
+  }, [setAllOrganisations]);
   const getWidth = (status) => {
     let width = "";
     switch (status) {
@@ -72,7 +107,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Order Name
+                  Organisation Name
                 </th>
                 <th
                   className={
@@ -82,7 +117,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Amount
+                  email
                 </th>
                 <th
                   className={
@@ -92,7 +127,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Status
+                  Wallet Balance
                 </th>
                 <th
                   className={
@@ -112,7 +147,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Completion
+                  Users
                 </th>
                 <th
                   className={
