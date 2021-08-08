@@ -17,6 +17,7 @@ export default function CardSettings({ title, isOrganisation }) {
   const { user } = useContext(UserContext);
   const { organisation } = useContext(OrganisationContext);
   const [loading, setloading] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -29,12 +30,15 @@ export default function CardSettings({ title, isOrganisation }) {
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
             <h6 className="text-blueGray-700 text-xl font-bold">{title}</h6>
-            <button
-              className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-              type="button"
-            >
-              Edit
-            </button>
+            {!isEditing && (
+              <button
+                className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
@@ -49,14 +53,22 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="name"
                       >
                         Name
                       </label>
                       <input
                         type="text"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={organisation.name}
                       />
                     </div>
@@ -64,14 +76,22 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="grid-password"
                       >
                         Email address
                       </label>
                       <input
                         type="email"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={organisation.email}
                       />
                     </div>
@@ -79,7 +99,11 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="id"
                       >
                         ID
@@ -87,7 +111,11 @@ export default function CardSettings({ title, isOrganisation }) {
                       <input
                         type="text"
                         name="id"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={organisation.id}
                       />
                     </div>
@@ -100,7 +128,11 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="username"
                       >
                         Username
@@ -109,7 +141,11 @@ export default function CardSettings({ title, isOrganisation }) {
                         type="text"
                         name="username"
                         disabled
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={user.data.username || ""}
                       />
                     </div>
@@ -117,7 +153,11 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="email"
                       >
                         Email address
@@ -125,7 +165,11 @@ export default function CardSettings({ title, isOrganisation }) {
                       <input
                         type="email"
                         name="email"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={user.data ? user.data.email || "" : ""}
                       />
                     </div>
@@ -133,7 +177,11 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="firstName"
                       >
                         First Name
@@ -141,7 +189,11 @@ export default function CardSettings({ title, isOrganisation }) {
                       <input
                         type="text"
                         name="firstName"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={user.data.firstName || ""}
                       />
                     </div>
@@ -149,7 +201,11 @@ export default function CardSettings({ title, isOrganisation }) {
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
                       <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        className={
+                          isEditing
+                            ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                            : "block text-blueGray-600 text-xs mb-2"
+                        }
                         htmlFor="lastName"
                       >
                         Last Name
@@ -157,7 +213,11 @@ export default function CardSettings({ title, isOrganisation }) {
                       <input
                         type="text"
                         name="lastName"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        className={
+                          isEditing
+                            ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                            : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                        }
                         defaultValue={user.data.lastName}
                       />
                     </div>
@@ -174,14 +234,22 @@ export default function CardSettings({ title, isOrganisation }) {
               <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                    className={
+                      isEditing
+                        ? "block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                        : "block text-blueGray-600 text-xs mb-2"
+                    }
                     htmlFor="address"
                   >
                     Address
                   </label>
                   <textarea
                     type="text"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                    className={
+                      isEditing
+                        ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
+                        : "border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                    }
                     defaultValue={
                       isOrganisation ? organisation.address : user.data.address
                     }
@@ -190,21 +258,23 @@ export default function CardSettings({ title, isOrganisation }) {
                 </div>
               </div>
             </div>
-            <button
-              className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
-              type="button"
-            >
-              {!loading ? (
-                "Update Profile"
-              ) : (
-                <ClipLoader
-                  color="#54E0C7"
-                  loading={loading}
-                  css={override}
-                  size={20}
-                />
-              )}
-            </button>
+            {isEditing && (
+              <button
+                className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
+                type="button"
+              >
+                {!loading ? (
+                  "Update Account"
+                ) : (
+                  <ClipLoader
+                    color="#54E0C7"
+                    loading={loading}
+                    css={override}
+                    size={20}
+                  />
+                )}
+              </button>
+            )}
           </form>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "styled-components/macro";
+import { WalletContext } from "../context/WalletContext";
+import { PaystackButton } from "react-paystack";
 
 const override = css`
   display: block;
@@ -14,16 +16,18 @@ const override = css`
 
 export default function WalletPage() {
   const { user } = useContext(UserContext);
+  const { wallet } = useContext(WalletContext);
   const [loading, setloading] = useState(false);
+  const [values, setValues] = useState({});
 
-  const [values, setValues] = useState({
-    proofReading: false,
-    basicFormatting: true,
-    documentVetting: false,
-  });
-
-  const handleInput = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+  const componentProps = {
+    email: user.data.email,
+    amount: values.amount,
+    publicKey: "pk_test_4f8f5ae30de2149b4da6ebf12b7023d1eddf3678",
+    text: "Pay Now",
+    onSuccess: () =>
+      alert("Thanks for doing business with us! Come back soon!!"),
+    onClose: () => alert("Wait! Don't leave :("),
   };
 
   const handleIntegerInput = (e) => {
@@ -54,131 +58,83 @@ export default function WalletPage() {
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                    className="block text-blueGray-600 text-xs mb-2"
                     htmlFor="grid-password"
                   >
-                    First Name
+                    Balance
                   </label>
                   <input
                     type="text"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.firstName}
+                    className="border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                    defaultValue={`${wallet.amount ? wallet.amount : 0}PP`}
                     placeholder="Document Name"
                     name="firstName"
-                    onChange={handleInput}
+                    disabled
                   />
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                    className="block text-blueGray-600 text-xs mb-2"
                     htmlFor="lastName"
                   >
-                    Last Name
+                    ID
                   </label>
                   <input
                     type="text"
                     name="lastName"
-                    onChange={handleInput}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.lastName}
+                    disabled
+                    className="border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
+                    defaultValue={`POG-WA${wallet.id ? wallet.id : "00"}`}
                   />
                 </div>
               </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="email"
-                  >
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.email}
-                    name="email"
-                    onChange={handleInput}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4"></div>
             </div>
-            <hr className="mt-6 border-b-1 border-blueGray-300" />
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              Fund Wallet
-            </h6>
+            {user.data.organisation !== null && !user.isOrganisation ? (
+              <>
+                <hr className="mt-6 border-b-1 border-blueGray-300" />
+                <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+                  Fund Wallet
+                </h6>
 
-            <div className="w-full lg:w-12/12 px-4">
-              <div className="relative w-full mb-3">
-                <label
-                  className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  htmlFor="grid-password"
+                <div className="w-full lg:w-12/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Amount
+                    </label>
+                    <input
+                      type="number"
+                      name="amount"
+                      onChange={handleIntegerInput}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="Enter Amount"
+                    />
+                  </div>
+                </div>
+                <PaystackButton
+                  {...componentProps}
+                  className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
                 >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  onChange={handleInput}
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  placeholder="Document Name"
-                />
-              </div>
-            </div>
-            <div className="flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    File
-                  </label>
-                  <input
-                    type="file"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Document Name"
-                    name="firstName"
-                    onChange={handleInput}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="noOfCopies"
-                  >
-                    No of copies
-                  </label>
-                  <input
-                    type="number"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="Number of copies"
-                    name="noOfCopies"
-                    onChange={handleIntegerInput}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <button
-              className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
-              type="button"
-            >
-              {!loading ? (
-                "Create Order"
-              ) : (
-                <ClipLoader
-                  color="#54E0C7"
-                  loading={loading}
-                  css={override}
-                  size={20}
-                />
-              )}
-            </button>
+                  {!loading ? (
+                    "Fund Wallet"
+                  ) : (
+                    <ClipLoader
+                      color="#54E0C7"
+                      loading={loading}
+                      css={override}
+                      size={20}
+                    />
+                  )}
+                </PaystackButton>
+                <button type="button"></button>
+              </>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       </div>

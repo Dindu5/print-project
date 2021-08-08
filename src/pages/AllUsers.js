@@ -1,33 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import Pagination from "./Pagination";
-import formatNaira from "format-to-naira";
+import { useEffect } from "react";
+import Pagination from "../components/Pagination";
+import baseUrl from "../api";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 // components
 
-import TableDropdown from "./TableDropdown.js";
+import UserTableDropdown from "../components/UserTableDropdown.js";
 
-export default function CardTable({ color, printOrders, title }) {
-  const getWidth = (status) => {
-    let width = "";
-    switch (status) {
-      case "pending":
-        width = "25%";
-        break;
-      case "processing":
-        width = "50%";
-        break;
-      case "completed":
-        width = "75%";
-        break;
-      case "delivered":
-        width = "100%";
-        break;
-      default:
-        break;
+export default function Organisations({ color, title }) {
+  const [allUsers, setAllUsers] = useState([]);
+  const errorNotification = (msg) =>
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  useEffect(() => {
+    const AuthToken = localStorage.getItem("AuthToken");
+    if (AuthToken) {
+      axios.defaults.headers.common.Authorization = AuthToken;
+      async function getData() {
+        try {
+          const usersResponse = await axios.get(`${baseUrl}/users/`);
+          setAllUsers(usersResponse.data);
+        } catch (error) {
+          errorNotification(
+            "Could not get organisations data, please try again"
+          );
+        }
+      }
+      getData();
     }
-    return width;
-  };
+  }, [setAllUsers]);
 
   const formatName = (str) => {
     const slicedString = str.slice(0, 20);
@@ -73,7 +85,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Order Name
+                  Name
                 </th>
                 <th
                   className={
@@ -83,7 +95,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Amount
+                  email
                 </th>
                 <th
                   className={
@@ -93,7 +105,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Status
+                  Print Orders
                 </th>
                 <th
                   className={
@@ -103,17 +115,7 @@ export default function CardTable({ color, printOrders, title }) {
                       : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                   }
                 >
-                  Owner
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-                    (color === "light"
-                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                      : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-                  }
-                >
-                  Completion
+                  Account Type
                 </th>
                 <th
                   className={
@@ -126,9 +128,9 @@ export default function CardTable({ color, printOrders, title }) {
               </tr>
             </thead>
             <tbody>
-              {printOrders.map((order) => {
+              {allUsers.map((user) => {
                 return (
-                  <tr key={order.id}>
+                  <tr key={user.id}>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                       <img
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hjxbQj0i-I3pfkx4iKiGbBGdRfTOZ1mhZg&usqp=CAU"
@@ -143,85 +145,44 @@ export default function CardTable({ color, printOrders, title }) {
                             : "text-white")
                         }
                       >
-                        {formatName(order.name)}
+                        {formatName(user.username)}
                       </span>
                     </th>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {formatNaira(order.amount)}
+                      {user.email}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      <i
-                        className={`fas fa-circle mr-2 ${
-                          order.status === "pending" && "text-red-500"
-                        } ${
-                          order.status === "processing" && "text-orange-500"
-                        } ${
-                          order.status === "completed" && "text-emerald-500"
-                        }`}
-                      ></i>{" "}
-                      {order.status}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {order.users_permissions_user?.username ||
-                        order.firstName + " " + order.lastName}
-                      {/* <div className="flex">
-                    <img
-                      src={require("../images/team-1-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                    ></img>
-                    <img
-                      src={require("../images/team-2-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                    <img
-                      src={require("../images/team-3-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                    <img
-                      src={require("../images/team-4-470x470.png").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                  </div> */}
+                      {user.print_orders?.length || "0"}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       <div className="flex items-center">
-                        <span className="mr-2">{getWidth(order.status)}</span>
-                        <div className="relative w-full">
-                          <div
-                            className={`overflow-hidden h-2 text-xs flex rounded ${
-                              order.status === "pending" && "bg-red-200"
-                            } ${
-                              order.status === "processing" && "text-orange-200"
-                            } ${
-                              order.status === "completed" && "bg-teal-200"
-                            } ${
-                              order.status === "delivered" && "text-emerald-200"
-                            }`}
-                          >
-                            <div
-                              style={{ width: getWidth(order.status) }}
-                              className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
-                                order.status === "pending" && "bg-red-500"
-                              } ${
-                                order.status === "processing" &&
-                                "text-orange-500"
-                              } ${
-                                order.status === "completed" && "bg-teal-500"
-                              } ${
-                                order.status === "delivered" &&
-                                "text-emerald-500"
-                              }`}
-                            ></div>
+                        {!user.isOrganisation && user.organisation === null && (
+                          <div className="flex justify-center items-center m-1 px-2 py-1 rounded-full bg-blueGray-200 text-base text-blueGray font-medium">
+                            <div className="flex-initial max-w-full leading-none text-xs font-normal">
+                              Single User
+                            </div>
                           </div>
-                        </div>
+                        )}
+
+                        {!user.isOrganisation && user.organisation !== null && (
+                          <div className="flex justify-center items-center m-1 px-2 py-1 rounded-full bg-teal-200 text-base text-orange-800 font-medium">
+                            <div className="flex-initial max-w-full leading-none text-xs font-normal">
+                              Organisation User
+                            </div>
+                          </div>
+                        )}
+
+                        {user.isOrganisation && (
+                          <div className="flex justify-center items-center m-1 px-2 py-1 rounded-full bg-lightBlue-200 text-base text-orange-800 font-medium">
+                            <div className="flex-initial max-w-full leading-none text-xs font-normal">
+                              Organisation Admin
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                      <TableDropdown id={order.id} />
+                      <UserTableDropdown id={user.id} />
                     </td>
                   </tr>
                 );
@@ -235,11 +196,11 @@ export default function CardTable({ color, printOrders, title }) {
   );
 }
 
-CardTable.defaultProps = {
+Organisations.defaultProps = {
   color: "light",
 };
 
-CardTable.propTypes = {
+Organisations.propTypes = {
   color: PropTypes.oneOf(["light", "dark"]),
   printOrders: PropTypes.array,
 };

@@ -2,11 +2,13 @@ import React, { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 // import { OrganisationContext } from "../context/OrganisationContext";
 import { css } from "styled-components/macro";
+import { PrintOrderContext } from "../context/PrintOrderContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import baseUrl from "../api";
 import axios from "axios";
+import swal from "sweetalert";
 
 // components
 const override = css`
@@ -20,6 +22,7 @@ const override = css`
 export default function CardSettings() {
   const { user } = useContext(UserContext);
   // const { organisation } = useContext(OrganisationContext);
+  const { setPrintOrders, printOrders } = useContext(PrintOrderContext);
   const [loading, setloading] = React.useState(false);
   const [printOrder, setprintOrder] = React.useState({});
   const [isEditing, setIsEditing] = React.useState(false);
@@ -44,12 +47,64 @@ export default function CardSettings() {
       progress: undefined,
     });
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    setloading(true);
-  };
   let { id } = useParams();
-  console.log(user);
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    swal({
+      title: "Order Update?",
+      text: "Are you sure you want to update this print order?!",
+      icon: "warning",
+      buttons: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        endpointCall();
+      } else {
+        swal({
+          text: "Order not not deleted!",
+          timer: 1000,
+          icon: "info",
+          button: false,
+        });
+      }
+    });
+  };
+
+  const endpointCall = async () => {
+    try {
+      const deleteUrl = `${baseUrl}/print-orders/${id}`;
+      const AuthToken = localStorage.getItem("AuthToken");
+      axios.defaults.headers.common.Authorization = AuthToken;
+      const updateResponse = await axios.put(deleteUrl, {
+        ...printOrder,
+        ...values,
+      });
+      console.log(updateResponse);
+      setPrintOrders(
+        printOrders.map((order) => {
+          if (order.id === updateResponse.data.id) {
+            return { ...order, ...updateResponse.data };
+          } else {
+            return order;
+          }
+        })
+      );
+      swal("Poof! Print order has been deleted successfully!", {
+        icon: "success",
+      });
+      setloading(false);
+    } catch (e) {
+      console.log(e.request);
+      swal({
+        title: "Update Failed!",
+        icon: "error",
+        text: "Something went wrong, could not update order, please try again!",
+        timer: 2000,
+        button: false,
+      });
+      setloading(false);
+    }
+  };
 
   React.useEffect(() => {
     const AuthToken = localStorage.getItem("AuthToken");
@@ -119,7 +174,7 @@ export default function CardSettings() {
                   <input
                     type="text"
                     name="username"
-                    disabled={!isEditing}
+                    disabled
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -148,6 +203,7 @@ export default function CardSettings() {
                   <input
                     type="email"
                     name="email"
+                    onChange={handleInput}
                     disabled={!isEditing}
                     className={
                       isEditing
@@ -176,6 +232,7 @@ export default function CardSettings() {
                     type="text"
                     name="firstName"
                     disabled={!isEditing}
+                    onChange={handleInput}
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -201,6 +258,7 @@ export default function CardSettings() {
                     type="text"
                     name="lastName"
                     disabled={!isEditing}
+                    onChange={handleInput}
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -234,6 +292,7 @@ export default function CardSettings() {
                     type="text"
                     name="name"
                     disabled={!isEditing}
+                    onChange={handleInput}
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -258,7 +317,8 @@ export default function CardSettings() {
                   <input
                     type="number"
                     name="noOfCopies"
-                    disabled={!isEditing}
+                    onChange={handleInput}
+                    disabled
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -285,7 +345,8 @@ export default function CardSettings() {
                   <input
                     type="text"
                     name="noOfPages"
-                    disabled={!isEditing}
+                    onChange={handleInput}
+                    disabled
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -311,7 +372,7 @@ export default function CardSettings() {
                     onChange={handleInput}
                     name="status"
                     defaultValue={printOrder.status}
-                    disabled
+                    disabled={!user.data.isAdmin || !isEditing}
                     className={
                       isEditing
                         ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -360,7 +421,7 @@ export default function CardSettings() {
                   </select>
                 </div>
               </div>
-              {printOrder.homeDelivery ? (
+              {!printOrder.homeDelivery ? (
                 <>
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
@@ -378,7 +439,7 @@ export default function CardSettings() {
                         onChange={handleInput}
                         name="state"
                         defaultValue={printOrder.state}
-                        disabled
+                        disabled={!isEditing}
                         className={
                           isEditing
                             ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -406,7 +467,7 @@ export default function CardSettings() {
                         onChange={handleInput}
                         name="lga"
                         defaultValue={printOrder.lga}
-                        disabled
+                        disabled={!isEditing}
                         className={
                           isEditing
                             ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -434,6 +495,7 @@ export default function CardSettings() {
                         <textarea
                           type="text"
                           name="deliveryAddress"
+                          onChange={handleInput}
                           className={
                             isEditing
                               ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -446,6 +508,7 @@ export default function CardSettings() {
                         <input
                           type="text"
                           name="deliveryAddress"
+                          onChange={handleInput}
                           className={
                             isEditing
                               ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -468,13 +531,13 @@ export default function CardSettings() {
                       }
                       htmlFor="pickUpLocation"
                     >
-                      State
+                      Pickup Location
                     </label>
                     <select
                       onChange={handleInput}
                       name="pickUpLocation"
                       defaultValue={printOrder.pickUpLocation}
-                      disabled
+                      disabled={!isEditing}
                       className={
                         isEditing
                           ? "border-0 placeholder-blueGray-300 text-blueGray-600 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-white text-sm shadow px-3 py-3"
@@ -491,7 +554,7 @@ export default function CardSettings() {
             {isEditing && (
               <button
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
-                type="button"
+                type="submit"
               >
                 {!loading ? (
                   "Update Order"

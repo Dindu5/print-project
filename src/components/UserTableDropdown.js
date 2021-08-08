@@ -1,15 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { createPopper } from "@popperjs/core";
-import { UserContext } from "../context/UserContext";
-import { PrintOrderContext } from "../context/PrintOrderContext";
+// import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import axios from "axios";
-import baseUrl from "../api";
 
-const NotificationDropdown = ({ id }) => {
-  const { user } = useContext(UserContext);
-  const { printOrders, setPrintOrders } = useContext(PrintOrderContext);
+const UserTableDropdown = ({ id }) => {
+  // const { user } = useContext(UserContext);
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef();
@@ -25,26 +22,13 @@ const NotificationDropdown = ({ id }) => {
   };
   const endpointCall = async () => {
     try {
-      const deleteUrl = `${baseUrl}/print-orders/${id}`;
-      const AuthToken = localStorage.getItem("AuthToken");
-      axios.defaults.headers.common.Authorization = AuthToken;
-      const deleteResponse = await axios.delete(deleteUrl);
+      const deleteResponse = await axios.delete(`/print-orders/${id}`);
+
       console.log(deleteResponse);
-      swal("Poof! Print order has been deleted successfully!", {
-        icon: "success",
-      });
-      setPrintOrders(
-        printOrders.filter((order) => order.id !== deleteResponse.data.id)
-      );
+      return true;
     } catch (e) {
-      console.log(e.request);
-      swal({
-        title: "Failed!",
-        icon: "error",
-        text: "Something went wrong, could not delete order please try again!",
-        timer: 2000,
-        button: false,
-      });
+      console.log(e.reponse);
+      return false;
     }
   };
   const deleteOrder = async () => {
@@ -56,14 +40,13 @@ const NotificationDropdown = ({ id }) => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        endpointCall();
+        if (endpointCall()) {
+          swal("Poof! Your imaginary file has been deleted!", {
+            icon: "success",
+          });
+        }
       } else {
-        swal({
-          text: "Order not not deleted!",
-          timer: 1000,
-          icon: "info",
-          button: false,
-        });
+        swal("Loan offer not deleted!");
       }
     });
   };
@@ -87,27 +70,16 @@ const NotificationDropdown = ({ id }) => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
-        {user.data.isAdmin ? (
-          <Link
-            to={`/admin/jobs/${id}`}
-            className={
-              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-            }
-          >
-            <i className="fas fa-user-edit mr-3"></i>
-            Update Order
-          </Link>
-        ) : (
-          <Link
-            to={`/admin/jobs/${id}`}
-            className={
-              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-            }
-          >
-            <i className="fas fa-binoculars mr-3"></i>
-            View Order
-          </Link>
-        )}
+        <Link
+          to={`/admin/jobs/${id}`}
+          className={
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+          }
+        >
+          <i className="fas fa-binoculars mr-3"></i>
+          View User
+        </Link>
+
         <a
           href="#delete"
           className={
@@ -119,11 +91,11 @@ const NotificationDropdown = ({ id }) => {
           }}
         >
           <i className="fas fa-trash mr-4"></i>
-          Delete Order
+          Remove User
         </a>
       </div>
     </>
   );
 };
 
-export default NotificationDropdown;
+export default UserTableDropdown;

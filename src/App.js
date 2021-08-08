@@ -47,8 +47,10 @@ function App() {
             authenticated: true,
             data: userResponse.data,
           });
-          console.log(userResponse.data);
-          if (userResponse.data.organisation !== null) {
+          if (
+            userResponse.data.organisation !== null &&
+            !userResponse.data.isAdmin
+          ) {
             const organisationResponse = await axios.get(
               `${baseUrl}/organisations/${userResponse.data.organisation}`
             );

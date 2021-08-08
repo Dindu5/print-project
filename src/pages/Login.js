@@ -116,7 +116,6 @@ export const Login = ({
       const AuthToken = `Bearer ${loginResponse.data.jwt}`;
       localStorage.setItem("AuthToken", AuthToken);
       axios.defaults.headers.common.Authorization = AuthToken;
-      console.log(loginResponse);
       const welcomeMsg = `Login Successful, welcome ${loginResponse.data.user.firstName}`;
       successNotification(welcomeMsg);
       setloading(false);
@@ -180,7 +179,7 @@ export const Login = ({
                       size={25}
                     />
                     <span className="text">
-                      {loading ? "Creating Account..." : "SignUp"}
+                      {loading ? "Signing In..." : "SignIn"}
                     </span>
                   </SubmitButton>
                 </Form>

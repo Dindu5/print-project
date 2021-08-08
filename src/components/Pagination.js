@@ -17,14 +17,7 @@ export default function Example() {
           Next
         </a>
       </div>
-      <div className="flex-1 flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to{" "}
-            <span className="font-medium">10</span> of{" "}
-            <span className="font-medium">97</span> results
-          </p>
-        </div>
+      <div className="flex-1 flex items-center justify-end">
         <div>
           <nav
             className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"

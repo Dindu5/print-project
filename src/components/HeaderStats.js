@@ -72,7 +72,7 @@ export default function HeaderStats() {
                   statPercentColor="text-orange-500"
                   statDescripiron={
                     user.data.isOrganisation || user.data.isAdmin
-                      ? "Organization"
+                      ? "Organisation"
                       : "Orders"
                   }
                   statIconName="fas fa-users"
@@ -81,10 +81,12 @@ export default function HeaderStats() {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="WALLET"
+                  statSubtitle={`${user.data.isAdmin ? "Orgs" : "Wallet"}`}
                   statTitle={`${wallet.amount ? wallet.amount : 0}PP`}
                   statPercentColor="text-emerald-500"
-                  statDescripiron="Balance"
+                  statDescripiron={`${
+                    user.data.isAdmin ? "Organisations" : "Balance"
+                  }`}
                   statIconName="fas fa-money-check-alt"
                   statIconColor="bg-lightBlue-500"
                 />
