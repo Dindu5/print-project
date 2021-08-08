@@ -17,10 +17,10 @@ const Description = tw(
 )`mt-4 lg:text-base text-center text-gray-700 max-w-lg mt-10 mx-auto`;
 
 function ContactUs() {
-  // const buttonRoundedCss = tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
       <NavLink to="/contact">Contact Us</NavLink>
+      <NavLink to="/track-order">Track Order</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
       <NavLink to="/auth/login" tw="lg:ml-12!">

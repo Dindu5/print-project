@@ -4,9 +4,10 @@ import tw from "twin.macro";
 import { SectionHeading } from "../components/misc/Headings";
 import { NavLinks, NavLink, PrimaryLink } from "../components/Header";
 import { SectionDescription } from "../components/misc/Typography.js";
-import OrderForm from "../components/OrderForm";
+import TrackForm from "../components/TrackForm";
 import Header from "../components/Header";
 import AnimationRevealPage from "../helpers/AnimationRevealPage";
+import Footer from "../components/Footer";
 
 const Heading = tw(
   SectionHeading
@@ -15,7 +16,7 @@ const Description = tw(
   SectionDescription
 )`mt-4 lg:text-base text-center text-gray-700 max-w-lg mt-10 mx-auto`;
 
-function CreateOrder() {
+function TrackOrder() {
   // const buttonRoundedCss = tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
@@ -35,16 +36,16 @@ function CreateOrder() {
     <>
       <AnimationRevealPage>
         <Header links={navLinks} />
-        <Heading>Create You Print Order</Heading>
+        <Heading>Track your order</Heading>
         <Description>
-          Fill out the form below and create your print order. You can add
-          choose to include our optional services and each comes with its own
-          additional price
+          All we need is your order ID and we would get the details of your
+          order to know if its ready or not
         </Description>
-        <OrderForm />
+        <TrackForm />
+        <Footer />
       </AnimationRevealPage>
     </>
   );
 }
 
-export default CreateOrder;
+export default TrackOrder;

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Admin from "./layouts/Admin.js";
 import Auth from "./layouts/Auth";
 import CreateOrder from "./pages/CreateOrder";
+import TrackOrder from "./pages/TrackOrder";
 import ContactUs from "./pages/ContactUs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -98,6 +99,9 @@ function App() {
         </Route>
         <Route exact path="/create-order">
           <CreateOrder />
+        </Route>
+        <Route exact path="/track-order">
+          <TrackOrder />
         </Route>
         <Route exact path="/contact">
           <ContactUs />

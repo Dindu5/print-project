@@ -37,9 +37,9 @@ export const GetStarted = ({
   subheading = "Interested in Pog-Print ?",
   heading = "Integrate Pog-Print with your organization.",
   primaryLinkText = "Get Started",
-  primaryLinkUrl = "http://timerse.com",
+  primaryLinkUrl = "/signup",
   secondaryLinkText = "Contact Us",
-  secondaryLinkUrl = "http://google.com",
+  secondaryLinkUrl = "/contact",
   pushDownFooter = true,
 }) => {
   return (
@@ -52,8 +52,8 @@ export const GetStarted = ({
               <Heading>{heading}</Heading>
             </TextContainer>
             <LinksContainer>
-              <PrimaryLink href={primaryLinkUrl}>{primaryLinkText}</PrimaryLink>
-              <SecondaryLink href={secondaryLinkUrl}>
+              <PrimaryLink to={primaryLinkUrl}>{primaryLinkText}</PrimaryLink>
+              <SecondaryLink to={secondaryLinkUrl}>
                 {secondaryLinkText}
               </SecondaryLink>
             </LinksContainer>

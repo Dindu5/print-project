@@ -73,6 +73,7 @@ export const Hero = ({
   const navLinks = [
     <NavLinks key={1}>
       <NavLink to="/contact">Contact Us</NavLink>
+      <NavLink to="/track-order">Track Order</NavLink>
     </NavLinks>,
 
     <NavLinks key={2}>
