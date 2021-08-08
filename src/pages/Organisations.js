@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 import TableDropdown from "../components/TableDropdown.js";
 
-export default function Organisations({ color, printOrders, title }) {
+export default function Organisations({ color, title }) {
   const [allOrganisations, setAllOrganisations] = useState([]);
   const errorNotification = (msg) =>
     toast.error(msg, {

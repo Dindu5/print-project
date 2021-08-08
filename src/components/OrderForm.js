@@ -15,7 +15,7 @@ const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 
 const FormContainer = styled.div`
-  ${tw`p-10 sm:p-12 md:p-16 bg-primary-500 text-gray-100 rounded-lg relative`}
+  ${tw`p-4 sm:p-10 md:p-16 py-12 bg-primary-500 text-gray-100 rounded-lg relative`}
   form {
     ${tw`mt-4`}
   }
@@ -76,9 +76,21 @@ const CheckboxContainer = styled.ul`
       overflow: hidden;
       border-radius: 6px;
 
+      @media (max-width: 1024px) {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-top: 1.3rem;
+        padding-bottom: 1.3rem;
+      }
+
       span {
         right: 5rem;
         position: absolute;
+        @media (max-width: 1024px) {
+          right: 3rem;
+          font-size: 0.78rem;
+          top: 35%;
+        }
       }
 
       &:before {
@@ -113,6 +125,10 @@ const CheckboxContainer = styled.ul`
         transform: translateY(-50%);
         cursor: pointer;
         transition: all 200ms ease-in;
+
+        @media (max-width: 1024px) {
+          right: 0.75rem;
+        }
       }
     }
 
@@ -141,6 +157,9 @@ const CheckboxContainer = styled.ul`
       transform: translateY(-50%);
       cursor: pointer;
       visibility: hidden;
+      @media (max-width: 1024px) {
+        right: 0.75rem;
+      }
     }
   }
 `;
@@ -156,10 +175,10 @@ const TwoColumn = tw.div`flex flex-col sm:flex-row justify-between`;
 const Column = tw.div`sm:w-5/12 flex flex-col`;
 const InputContainer = tw.div`relative py-5 mt-6`;
 const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
-const TextArea = tw.textarea`h-24 sm:h-full w-full px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-6 resize-none`;
-const Select = tw.select`w-full px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
+const TextArea = tw.textarea`h-24 sm:h-full w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-6 resize-none`;
+const Select = tw.select`w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
 const SubmitButton = tw.button`w-full sm:w-40 mt-6 px-3 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
-const Input = tw.input`w-full px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
+const Input = tw.input`w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
 
 const SvgDotPattern1 = tw(
   SvgDotPatternIcon
@@ -200,17 +219,6 @@ export const OrderForm = () => {
 
   const form = useRef(null);
 
-  const calculateAmount = () => {
-    let amount = 0;
-    amount = pages * 15;
-    if (values.documentVetting) {
-      amount = amount + 50;
-    }
-    if (values.proofReading) {
-      amount = amount + 70;
-    }
-    setTotalAmount(amount);
-  };
   useEffect(() => {
     let amount = 0;
     amount = pages * 15;
@@ -223,6 +231,9 @@ export const OrderForm = () => {
     if (deliveryOption === "home") {
       amount = amount + 100;
     }
+    if (values.noOfCopies) {
+      amount = amount * values.noOfCopies;
+    }
     setTotalAmount(amount);
   }, [values, deliveryOption, pages]);
 
@@ -232,7 +243,6 @@ export const OrderForm = () => {
   // Submit function
 
   const handleSubmit = async (e) => {
-    calculateAmount();
     e.preventDefault();
     setloading(true);
     const fileData = new FormData();
@@ -344,6 +354,7 @@ export const OrderForm = () => {
                       type="file"
                       name="file"
                       placeholder="Upload File"
+                      accept=".doc,.docx"
                       onChange={uploadFile}
                     />
                     <Input

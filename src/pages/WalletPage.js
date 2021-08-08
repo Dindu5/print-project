@@ -5,6 +5,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "styled-components/macro";
 import { WalletContext } from "../context/WalletContext";
 import { PaystackButton } from "react-paystack";
+import baseUrl from "../api";
+import swal from "sweetalert";
+import axios from "axios";
 
 const override = css`
   display: block;
@@ -16,18 +19,56 @@ const override = css`
 
 export default function WalletPage() {
   const { user } = useContext(UserContext);
-  const { wallet } = useContext(WalletContext);
+  const { wallet, setWallet } = useContext(WalletContext);
   const [loading, setloading] = useState(false);
   const [values, setValues] = useState({});
 
+  const endpointCall = async () => {
+    try {
+      const newAmount = values.amount / 20;
+      const updateUrl = `${baseUrl}/wallets/${wallet.id}`;
+      const AuthToken = localStorage.getItem("AuthToken");
+      axios.defaults.headers.common.Authorization = AuthToken;
+      const updateResponse = await axios.put(updateUrl, {
+        ...wallet,
+        amount: newAmount + parseInt(wallet.amount),
+      });
+      swal(
+        "Hurray! Your wallet has been topped up successfully successfully!",
+        {
+          icon: "success",
+        }
+      );
+      setWallet({
+        ...wallet,
+        amount: updateResponse.data.amount,
+      });
+      const input = document.querySelector("#amount-update");
+      input.value = "";
+    } catch (e) {
+      swal({
+        title: "Failed!",
+        icon: "error",
+        text: "Something went wrong, could not complete your payment!",
+        timer: 2000,
+        button: false,
+      });
+    }
+  };
+
   const componentProps = {
     email: user.data.email,
-    amount: values.amount,
+    amount: values.amount * 100,
     publicKey: "pk_test_4f8f5ae30de2149b4da6ebf12b7023d1eddf3678",
     text: "Pay Now",
-    onSuccess: () =>
-      alert("Thanks for doing business with us! Come back soon!!"),
-    onClose: () => alert("Wait! Don't leave :("),
+    onSuccess: () => endpointCall(),
+    onClose: () =>
+      swal({
+        text: "Wallet topup failed 😥",
+        timer: 1000,
+        icon: "info",
+        button: false,
+      }),
   };
 
   const handleIntegerInput = (e) => {
@@ -63,14 +104,10 @@ export default function WalletPage() {
                   >
                     Balance
                   </label>
-                  <input
-                    type="text"
-                    className="border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm"
-                    defaultValue={`${wallet.amount ? wallet.amount : 0}PP`}
-                    placeholder="Document Name"
-                    name="firstName"
-                    disabled
-                  />
+
+                  <p className="border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm">
+                    {wallet.amount ? wallet.amount : 0}PP
+                  </p>
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
@@ -109,6 +146,7 @@ export default function WalletPage() {
                     <input
                       type="number"
                       name="amount"
+                      id="amount-update"
                       onChange={handleIntegerInput}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Enter Amount"

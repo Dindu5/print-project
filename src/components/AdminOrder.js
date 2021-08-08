@@ -1,9 +1,14 @@
 import React from "react";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { PrintOrderContext } from "../context/PrintOrderContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "styled-components/macro";
 import styled from "styled-components";
+import docx4js from "docx4js";
+import axios from "axios";
+import baseUrl from "../api";
+import { toast } from "react-toastify";
 
 const override = css`
   display: block;
@@ -114,14 +119,62 @@ const CheckboxContainer = styled.ul`
 
 export default function CardSettings() {
   const { user } = useContext(UserContext);
+  const { setPrintOrders, printOrders } = useContext(PrintOrderContext);
   const [deliveryOption, setdeliveryOption] = useState("home");
   const [loading, setloading] = useState(false);
+  const [file, setFile] = useState();
+  const [pages, setPages] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(1);
 
   const [values, setValues] = useState({
     proofReading: false,
     basicFormatting: true,
     documentVetting: false,
   });
+
+  const successNotification = () =>
+    toast.success("Print order successfully initiated", {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const errorNotification = () =>
+    toast.error("Something went wrong could you try again", {
+      position: "top-right",
+      autoClose: 7000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const getPages = (files) => {
+    docx4js
+      .load(files)
+      .then((docx) => {
+        const propsAppRaw = docx.parts["docProps/app.xml"]._data.getContent();
+        const propsApp = new TextDecoder("utf-8").decode(propsAppRaw);
+        const match = propsApp.match(/<Pages>(\d+)<\/Pages>/);
+        if (match && match[1]) {
+          const count = Number(match[1]);
+          setPages(count);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const uploadFile = (e) => {
+    setFile(e.target.files[0]);
+    getPages(e.target.files[0]);
+  };
 
   const handleInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -135,10 +188,72 @@ export default function CardSettings() {
     setValues({ ...values, [e.target.name]: e.target.checked });
   };
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
+    const AuthToken = localStorage.getItem("AuthToken");
+    axios.defaults.headers.common.Authorization = AuthToken;
     e.preventDefault();
     setloading(true);
+    const fileData = new FormData();
+    fileData.append("files", file);
+    const formattedValues = {
+      ...values,
+      noOfPages: pages,
+      documentId: `${Math.random(100)}`,
+      homeDelivery: deliveryOption === "home" ? true : false,
+    };
+    console.log(formattedValues);
+    try {
+      const fileResponse = await axios.post(`${baseUrl}/upload`, fileData);
+      console.log("fileResponse", fileResponse);
+      const newValues = {
+        ...formattedValues,
+        file: fileResponse.data[0],
+        firstName: user.data.firstName,
+        lastName: user.data.lastName,
+        email: user.data.email,
+        status: "pending",
+        amount: totalAmount,
+        users_permissions_user: user.data,
+      };
+      const response = await axios.post(`${baseUrl}/print-orders`, newValues);
+      console.log("res", response);
+      setPrintOrders([response.data, ...printOrders]);
+
+      successNotification();
+      setloading(false);
+    } catch (err) {
+      if (err.request) {
+        console.log(err.request);
+        console.log(err.response);
+      } else {
+        console.log(err.response);
+      }
+      setloading(false);
+      errorNotification();
+    } finally {
+      setloading(false);
+    }
   };
+
+  React.useEffect(() => {
+    let amount = 0;
+    amount = pages * 15;
+    if (values.documentVetting) {
+      amount = amount + 50;
+    }
+    if (values.proofReading) {
+      amount = amount + 70;
+    }
+    if (deliveryOption === "home") {
+      amount = amount + 100;
+    }
+    if (values.noOfCopies) {
+      amount = amount * values.noOfCopies;
+    }
+    setTotalAmount(amount);
+  }, [values, deliveryOption, pages]);
+
+  const adminForm = React.useRef(null);
 
   return (
     <div className="px-4">
@@ -151,66 +266,7 @@ export default function CardSettings() {
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <form onSubmit={submitForm}>
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              Personal Information
-            </h6>
-            <div className="flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.firstName}
-                    placeholder="Document Name"
-                    name="firstName"
-                    onChange={handleInput}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="lastName"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    onChange={handleInput}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.lastName}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    htmlFor="email"
-                  >
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    defaultValue={user.data.email}
-                    name="email"
-                    onChange={handleInput}
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4"></div>
-            </div>
-            <hr className="mt-6 border-b-1 border-blueGray-300" />
+          <form ref={adminForm} onSubmit={submitForm}>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
               Document Details
             </h6>
@@ -246,7 +302,8 @@ export default function CardSettings() {
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Document Name"
                     name="firstName"
-                    onChange={handleInput}
+                    accept=".doc,.docx"
+                    onChange={uploadFile}
                   />
                 </div>
               </div>
@@ -461,10 +518,11 @@ export default function CardSettings() {
                   </div>
                 </>
               )}
+              <div>{totalAmount}</div>
             </div>
             <button
               className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5"
-              type="button"
+              type="submit"
             >
               {!loading ? (
                 "Create Order"
