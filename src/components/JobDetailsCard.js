@@ -89,6 +89,22 @@ export default function CardSettings() {
           }
         })
       );
+      try {
+        const emailData = {
+          email: updateResponse.data.email,
+          name: updateResponse.data.firstName,
+          documentName: updateResponse.data.name,
+          status: updateResponse.data.status,
+          id: updateResponse.data.id,
+        };
+        const emailResponse = await axios.post(
+          `${baseUrl}/emails/update`,
+          emailData
+        );
+        console.log(emailResponse);
+      } catch (error) {
+        console.log(error);
+      }
       swal("Poof! Print order has been deleted successfully!", {
         icon: "success",
       });
@@ -114,6 +130,7 @@ export default function CardSettings() {
       try {
         const printOrderResponse = await axios.get(userUrl);
         setprintOrder(printOrderResponse.data);
+        console.log(printOrderResponse.data);
       } catch (error) {
         errorNotification(
           "Could not get print order details, please refresh your browser"
@@ -135,21 +152,36 @@ export default function CardSettings() {
     } else setIsEditing(true);
   };
 
+  // const downloadOrder = () => {
+  //   console.log("downloaded");
+  // };
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
             <h6 className="text-blueGray-700 text-xl font-bold">Job Details</h6>
-            {!isEditing && (
-              <button
+            <div className="d-flex align-center">
+              <a
+                href={`${baseUrl}${printOrder.file?.url}`}
+                target="_blank"
+                rel="noreferrer"
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => editOrder()}
+                download
               >
-                Edit
-              </button>
-            )}
+                Download File
+              </a>
+              {!isEditing && (
+                <button
+                  className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={() => editOrder()}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">

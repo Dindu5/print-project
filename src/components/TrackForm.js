@@ -8,6 +8,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import axios from "axios";
 import baseUrl from "../api";
 import { toast } from "react-toastify";
+import swal from "sweetalert";
+import Moment from "react-moment";
+import formatNaira from "format-to-naira";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -67,17 +70,18 @@ const SvgDotPattern1 = tw(
 
 export const TrackForm = () => {
   const [values, setValues] = useState({});
+  const [printOrder, setPrintOrder] = useState({});
   const [loading, setloading] = useState(false);
-  const successNotification = () =>
-    toast.success("Print order successfully initiated", {
-      position: "top-right",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  // const successNotification = () =>
+  //   toast.success("Print order successfully initiated", {
+  //     position: "top-right",
+  //     autoClose: 7000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
 
   const errorNotification = () =>
     toast.error("Something went wrong could you try again", {
@@ -96,19 +100,31 @@ export const TrackForm = () => {
     e.preventDefault();
     setloading(true);
     try {
-      const response = await axios.post(`${baseUrl}/print-orders`);
-      console.log(response);
-      successNotification();
+      const response = await axios.get(
+        `${baseUrl}/print-orders/${parseInt(values.id)}`
+      );
+      setPrintOrder(response.data);
+      swal({
+        text: "Print order details successfully retrieved",
+        timer: 2000,
+        icon: "success",
+        button: false,
+      });
       setloading(false);
     } catch (err) {
-      if (err.request) {
-        console.log(err.request);
+      if (err.response) {
         console.log(err.response);
+        swal({
+          text: "Print order not found 😥",
+          timer: 2000,
+          icon: "info",
+          button: false,
+        });
       } else {
-        console.log(err.response);
+        console.log(err.request);
+        errorNotification();
       }
       setloading(false);
-      errorNotification();
     } finally {
       setloading(false);
     }
@@ -116,6 +132,11 @@ export const TrackForm = () => {
 
   const handleInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const dateFormat = (date) => {
+    const n = new Date(date);
+    return n.toISOString();
   };
 
   return (
@@ -129,7 +150,7 @@ export const TrackForm = () => {
                 <Label htmlFor="name-input">ID</Label>
                 <Input
                   type="text"
-                  name="name"
+                  name="id"
                   onChange={handleInput}
                   placeholder="Your Order ID"
                 />
@@ -146,28 +167,56 @@ export const TrackForm = () => {
                   />
                 )}
               </SubmitButton>
-              <hr className="mt-10" />
-              <CheckoutContainer className="flex mb-5 mt-12">
-                <div className="flex-auto p-6">
-                  <div className="flex flex-wrap">
-                    <h1 className="flex-auto text-xl font-semibold">Total</h1>
-                    <div className="text-xl font-semibold text-gray-500 total-amount">
-                      .00
+              {printOrder.name && (
+                <>
+                  <hr className="mt-10" />
+                  <CheckoutContainer className="flex mb-5 mt-12">
+                    <div className="flex-auto p-6">
+                      <div className="flex flex-wrap">
+                        <h1 className="flex-auto text-xl font-semibold total-amount">
+                          {printOrder.name}
+                        </h1>
+
+                        <div className="w-full flex-none text-sm font-medium text-gray-200 mt-6 mb-4 detail-b">
+                          Order Summary
+                        </div>
+                      </div>
+
+                      <p className="text-sm text-gray-500">
+                        ID: <strong>{printOrder.id}</strong>
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Status:{" "}
+                        <strong className="total-amount">
+                          {printOrder.status}
+                        </strong>
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Number of pages : {printOrder.noOfPages}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Number of copies : {printOrder.noOfCopies}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Created on :{" "}
+                        <Moment interval={5000} fromNow>
+                          {printOrder.created_at}
+                        </Moment>
+                      </p>
+                      <div className="w-full flex-none text-sm font-medium text-gray-200 mt-6 mb-4 detail-b">
+                        Order Price
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {" "}
+                        Total Amount :{" "}
+                        <strong className="total-amount">
+                          {formatNaira(printOrder.amount)}
+                        </strong>
+                      </p>
                     </div>
-                    <div className="w-full flex-none text-sm font-medium text-gray-200 mt-6 mb-4 detail-b">
-                      Order Summary
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-500">Pages : 5</p>
-                  <p className="text-sm text-gray-500">
-                    Pages charge<small>(₦15)</small> : 59595
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Document Vetting : ₦50
-                  </p>
-                  <p className="text-sm text-gray-500">Proof Reading : ₦70</p>
-                </div>
-              </CheckoutContainer>
+                  </CheckoutContainer>
+                </>
+              )}
             </form>
           </div>
           <SvgDotPattern1 />

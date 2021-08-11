@@ -10,6 +10,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 import axios from "axios";
 import baseUrl from "../api";
 import { toast } from "react-toastify";
+import swal from "sweetalert";
+import { PaystackButton } from "react-paystack";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -177,7 +179,7 @@ const InputContainer = tw.div`relative py-5 mt-6`;
 const Label = tw.label`absolute top-0 left-0 tracking-wide font-semibold text-sm`;
 const TextArea = tw.textarea`h-24 sm:h-full w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-6 resize-none`;
 const Select = tw.select`w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
-const SubmitButton = tw.button`w-full sm:w-40 mt-6 px-3 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
+// const SubmitButton = tw.button`w-full sm:w-40 mt-6 px-3 py-3 bg-gray-100 text-primary-500 rounded-full font-bold tracking-wide shadow-lg uppercase text-sm transition duration-300 transform focus:outline-none focus:shadow-outline hover:bg-gray-300 hover:text-primary-700 hocus:-translate-y-px hocus:shadow-xl`;
 const Input = tw.input`w-full px-3 lg:px-8 py-4 text-gray-900 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5`;
 
 const SvgDotPattern1 = tw(
@@ -242,8 +244,7 @@ export const OrderForm = () => {
   };
   // Submit function
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setloading(true);
     const fileData = new FormData();
     fileData.append("files", file);
@@ -264,6 +265,28 @@ export const OrderForm = () => {
       };
       const response = await axios.post(`${baseUrl}/print-orders`, newValues);
       console.log(response);
+      swal({
+        title: "Success",
+        icon: "success",
+        text: `Hurray, your print order with ID:(${response.data.id}) has been created successfuly`,
+        timer: 2000,
+        button: false,
+      });
+      try {
+        const emailData = {
+          email: response.data.email,
+          name: response.data.firstName,
+          documentName: response.data.name,
+          id: response.data.id,
+        };
+        const emailResponse = await axios.post(
+          `${baseUrl}/emails/create`,
+          emailData
+        );
+        console.log(emailResponse);
+      } catch (error) {
+        console.log(error);
+      }
       successNotification();
       setloading(false);
     } catch (err) {
@@ -304,6 +327,21 @@ export const OrderForm = () => {
       });
   };
 
+  const componentProps = {
+    email: values.email,
+    amount: totalAmount * 100,
+    publicKey: "pk_test_4f8f5ae30de2149b4da6ebf12b7023d1eddf3678",
+    text: "Pay Now",
+    onSuccess: () => handleSubmit(),
+    onClose: () =>
+      swal({
+        text: "Print order payment failed 😥",
+        timer: 1000,
+        icon: "info",
+        button: false,
+      }),
+  };
+
   const handleInput = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -318,7 +356,7 @@ export const OrderForm = () => {
         <FormContainer>
           <div tw="mx-auto max-w-4xl">
             <h2>Initialize Order</h2>
-            <form ref={form} onSubmit={handleSubmit}>
+            <form ref={form} onSubmit={(e) => e.preventDefault()}>
               <TwoColumn>
                 <Column>
                   <InputContainer>
@@ -328,18 +366,21 @@ export const OrderForm = () => {
                       name="firstName"
                       onChange={handleInput}
                       placeholder="First Name"
+                      required
                     />
                     <Input
                       type="text"
                       name="lastName"
                       onChange={handleInput}
                       placeholder="Last Name"
+                      required
                     />
                     <Input
                       type="email"
                       name="email"
                       onChange={handleInput}
                       placeholder="Email Address"
+                      required
                     />
                   </InputContainer>
                   <InputContainer>
@@ -349,6 +390,7 @@ export const OrderForm = () => {
                       name="name"
                       onChange={handleInput}
                       placeholder="Document Name"
+                      required
                     />
                     <Input
                       type="file"
@@ -356,6 +398,7 @@ export const OrderForm = () => {
                       placeholder="Upload File"
                       accept=".doc,.docx"
                       onChange={uploadFile}
+                      required
                     />
                     <Input
                       type="number"
@@ -442,11 +485,9 @@ export const OrderForm = () => {
                           Document Pickup options
                         </Label>
                         <Select name="pickUpLocation" onChange={handleInput}>
-                          <option>
-                            --- Select the nearest pickup location ---
-                          </option>
-                          <option>Home Delivery</option>
-                          <option>Pick up location</option>
+                          <option>No pickup location selected</option>
+                          <option>BJ Services</option>
+                          <option>Slygor Lodge eziobodo</option>
                         </Select>
                       </InputContainer>
                     ) : (
@@ -455,14 +496,13 @@ export const OrderForm = () => {
                           Document Delivery options
                         </Label>
                         <Select name="state" onChange={handleInput}>
-                          <option>--- select state ---</option>
-                          <option>Home Delivery</option>
-                          <option>Pick up location</option>
+                          <option>No state selected</option>
+                          <option>Imo State</option>
                         </Select>
                         <Select name="lga" onChange={handleInput}>
-                          <option>--- select LGA ---</option>
-                          <option>Home Delivery</option>
-                          <option>Pick up location</option>
+                          <option>No LGA selected</option>
+                          <option>Owerri-West</option>
+                          <option>Owerri-municipal</option>
                         </Select>
                         <TextArea
                           id="message-input"
@@ -505,10 +545,12 @@ export const OrderForm = () => {
                   </CheckoutContainer>
                 </Column>
               </TwoColumn>
-
-              <SubmitButton type="submit" value="Submit">
+              <PaystackButton
+                {...componentProps}
+                className="bg-lightBlue-500 text-primary-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-6 py-3 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 mt-5 hocus:shadow-xl"
+              >
                 {!loading ? (
-                  "Create Order"
+                  "Pay Now"
                 ) : (
                   <ClipLoader
                     color="#54E0C7"
@@ -517,7 +559,7 @@ export const OrderForm = () => {
                     size={20}
                   />
                 )}
-              </SubmitButton>
+              </PaystackButton>
             </form>
           </div>
           <SvgDotPattern1 />

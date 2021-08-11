@@ -9,6 +9,7 @@ import docx4js from "docx4js";
 import axios from "axios";
 import baseUrl from "../api";
 import { toast } from "react-toastify";
+import swal from "sweetalert";
 
 const override = css`
   display: block;
@@ -132,16 +133,16 @@ export default function CardSettings() {
     documentVetting: false,
   });
 
-  const successNotification = () =>
-    toast.success("Print order successfully initiated", {
-      position: "top-right",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  // const successNotification = () =>
+  //   toast.success("Print order successfully initiated", {
+  //     position: "top-right",
+  //     autoClose: 7000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
 
   const errorNotification = () =>
     toast.error("Something went wrong could you try again", {
@@ -218,9 +219,29 @@ export default function CardSettings() {
       const response = await axios.post(`${baseUrl}/print-orders`, newValues);
       console.log("res", response);
       setPrintOrders([response.data, ...printOrders]);
-
-      successNotification();
+      swal({
+        title: "Success",
+        icon: "success",
+        text: "Hurray, your print order has been created successfuly",
+        timer: 2000,
+        button: false,
+      });
       setloading(false);
+      try {
+        const emailData = {
+          email: response.data.email,
+          name: response.data.firstName,
+          documentName: response.data.name,
+          id: response.data.id,
+        };
+        const emailResponse = await axios.post(
+          `${baseUrl}/emails/create`,
+          emailData
+        );
+        console.log(emailResponse);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (err) {
       if (err.request) {
         console.log(err.request);

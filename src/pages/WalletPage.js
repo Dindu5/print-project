@@ -25,7 +25,7 @@ export default function WalletPage() {
 
   const endpointCall = async () => {
     try {
-      const newAmount = values.amount / 20;
+      const newAmount = values.amount;
       const updateUrl = `${baseUrl}/wallets/${wallet.id}`;
       const AuthToken = localStorage.getItem("AuthToken");
       axios.defaults.headers.common.Authorization = AuthToken;
@@ -128,7 +128,8 @@ export default function WalletPage() {
                 </div>
               </div>
             </div>
-            {user.data.organisation !== null && !user.isOrganisation ? (
+            {(user.data.organisation !== null && !user.isOrganisation) ||
+            user.data.organisation === null ? (
               <>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                 <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">

@@ -150,6 +150,7 @@ export const SignUp = ({
   const submitForm = async (e) => {
     e.preventDefault();
     setloading(true);
+    delete axios.defaults.headers.common.Authorization;
     try {
       const signupUrl = `${baseUrl}/auth/local/register`;
       const organisationUrl = `${baseUrl}/organisations`;
@@ -176,7 +177,7 @@ export const SignUp = ({
         ...values,
         username: `${values.firstName} ${values.lastName}`,
         isOrganisation,
-        organisation: isOrganisation ? organizationResponse.data : {},
+        organisation: isOrganisation ? organizationResponse.data : null,
         wallet: isOrganisation ? {} : walletResponse.data.id,
       };
       const userResponse = await axios.post(signupUrl, modifiedValues);
@@ -185,6 +186,16 @@ export const SignUp = ({
       setloading(false);
       setValues({});
       history.push("/login");
+      try {
+        const emailData = {
+          email: userResponse.data.user.email,
+          name: userResponse.data.user.firstName,
+        };
+        const emailResponse = await axios.post(`${baseUrl}/emails`, emailData);
+        console.log(emailResponse);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.log(error.response);
       errorNotification(
