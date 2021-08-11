@@ -134,11 +134,6 @@ export const TrackForm = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const dateFormat = (date) => {
-    const n = new Date(date);
-    return n.toISOString();
-  };
-
   return (
     <Container>
       <Content>
