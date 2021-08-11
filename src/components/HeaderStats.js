@@ -4,6 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { WalletContext } from "../context/WalletContext";
 import { PrintOrderContext } from "../context/PrintOrderContext";
 import { OrganisationContext } from "../context/OrganisationContext";
+import formatNaira from "format-to-naira";
 
 // components
 
@@ -82,7 +83,9 @@ export default function HeaderStats() {
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle={`${user.data.isAdmin ? "Orgs" : "Wallet"}`}
-                  statTitle={`${wallet.amount ? wallet.amount : 0}PP`}
+                  statTitle={`${
+                    wallet.amount ? formatNaira(wallet.amount) : 0
+                  }`}
                   statPercentColor="text-emerald-500"
                   statDescripiron={`${
                     user.data.isAdmin ? "Organisations" : "Balance"
