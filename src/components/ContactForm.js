@@ -5,9 +5,10 @@ import tw from "twin.macro";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { ReactComponent as SvgDotPatternIcon } from "../images/dot-pattern.svg";
 import ClipLoader from "react-spinners/ClipLoader";
-import axios from "axios";
-import baseUrl from "../api";
-import { toast } from "react-toastify";
+// import axios from "axios";
+// import baseUrl from "../api";
+// import { toast } from "react-toastify";
+import swal from "sweetalert";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -55,50 +56,22 @@ const SvgDotPattern1 = tw(
 export const ContactForm = () => {
   const [values, setValues] = useState({});
   const [loading, setloading] = useState(false);
-  const successNotification = () =>
-    toast.success("Print order successfully initiated", {
-      position: "top-right",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-
-  const errorNotification = () =>
-    toast.error("Something went wrong could you try again", {
-      position: "top-right",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
 
   // Submit function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setloading(true);
-    try {
-      const response = await axios.post(`${baseUrl}/print-orders`);
-      console.log(response);
-      successNotification();
+    setTimeout(() => {
       setloading(false);
-    } catch (err) {
-      if (err.request) {
-        console.log(err.request);
-        console.log(err.response);
-      } else {
-        console.log(err.response);
-      }
-      setloading(false);
-      errorNotification();
-    } finally {
-      setloading(false);
-    }
+      swal({
+        title: "Sent",
+        icon: "success",
+        text: `We would get back to you shortly`,
+        timer: 2000,
+        button: false,
+      });
+    }, 2000);
   };
 
   const handleInput = (e) => {
@@ -121,6 +94,7 @@ export const ContactForm = () => {
                       name="name"
                       onChange={handleInput}
                       placeholder="Your Name"
+                      required
                     />
                   </InputContainer>
                   <InputContainer>
@@ -130,6 +104,7 @@ export const ContactForm = () => {
                       name="email"
                       onChange={handleInput}
                       placeholder="Your Email Address"
+                      required
                     />
                   </InputContainer>
                 </Column>
@@ -141,6 +116,7 @@ export const ContactForm = () => {
                       name="message"
                       onChange={handleInput}
                       placeholder="What would you like to say?"
+                      required
                     />
                   </InputContainer>
                 </Column>

@@ -45,23 +45,20 @@ export const Faq = ({
   faqs = [
     {
       question: "Do you have functioning pickup locations ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      answer: "Yes, we currently have two pick-up locations at FUTO.",
     },
     {
       question: "How much do you charge per page ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      answer: "A standard price of 25 naira per page for quality print outs.",
     },
     {
       question: "Are your optional feature included in the base price ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      answer: "Optional services would incure additional price.",
     },
     {
       question: "Where can I reach you for support ?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "You can send us mail via the contact form, we would get back to you as soon as possible.",
     },
   ],
 }) => {

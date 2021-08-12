@@ -193,7 +193,7 @@ export const TrackForm = () => {
                         Number of copies : {printOrder.noOfCopies}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Created on :{" "}
+                        Created :{" "}
                         <Moment interval={5000} fromNow>
                           {printOrder.created_at}
                         </Moment>

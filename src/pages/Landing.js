@@ -11,7 +11,7 @@ import FAQ from "../components/Faq.js";
 import GetStarted from "../components/GetStarted.js";
 import Footer from "../components/Footer.js";
 import FeatureWithSteps from "../components/FeaturesWithSteps";
-import macHeroScreenshotImageSrc from "../images/hero-screenshot-2.png";
+import macHeroScreenshotImageSrc from "../images/admin.jpg";
 
 const HighlightedText = tw.span`text-primary-500`;
 const Subheading = tw.span`uppercase tracking-widest font-bold text-primary-500`;
