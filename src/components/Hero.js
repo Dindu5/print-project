@@ -72,6 +72,7 @@ export const Hero = ({
   const buttonRoundedCss = buttonRounded && tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
+      <NavLink to="/create-order">Print Now</NavLink>
       <NavLink to="/contact">Contact Us</NavLink>
       <NavLink to="/track-order">Track Order</NavLink>
     </NavLinks>,

@@ -20,6 +20,7 @@ function TrackOrder() {
   // const buttonRoundedCss = tw`rounded-full`;
   const navLinks = [
     <NavLinks key={1}>
+      <NavLink to="/create-order">Create Order</NavLink>
       <NavLink to="/contact">Contact Us</NavLink>
       <NavLink to="/track-order">Track Order</NavLink>
     </NavLinks>,
