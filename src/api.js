@@ -1,3 +1,3 @@
-const baseUrl = "https://c76b0f4c1c7b.ngrok.io";
+const baseUrl = "https://pog-print-backend.herokuapp.com";
 
 export default baseUrl;
