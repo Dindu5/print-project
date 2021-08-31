@@ -61,7 +61,10 @@ function App() {
             );
             setWallet(walletResponse.data);
           }
-          if (userResponse.data.organisation === null) {
+          if (
+            userResponse.data.organisation === null &&
+            userResponse.data.wallet
+          ) {
             const walletResponse = await axios.get(
               `${baseUrl}/wallets/${userResponse.data.wallet}`
             );

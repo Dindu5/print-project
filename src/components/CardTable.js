@@ -155,9 +155,8 @@ export default function CardTable({ color, printOrders, title }) {
                           order.status === "pending" && "text-red-500"
                         } ${
                           order.status === "processing" && "text-orange-500"
-                        } ${
-                          order.status === "completed" && "text-emerald-500"
-                        }`}
+                        } ${order.status === "completed" && "text-emerald-500"}
+                        ${order.status === "delivered" && "text-emerald-500"}`}
                       ></i>{" "}
                       {order.status}
                     </td>

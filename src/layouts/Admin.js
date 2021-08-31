@@ -67,12 +67,17 @@ export default function Admin() {
               `${baseUrl}/organisations/${userResponse.data.organisation}`
             );
             setOrganisation(organisationResponse.data);
-            const walletResponse = await axios.get(
-              `${baseUrl}/wallets/${organisationResponse.data.wallet.id}`
-            );
-            setWallet(walletResponse.data);
+            if (organisationResponse.data.wallet.id) {
+              const walletResponse = await axios.get(
+                `${baseUrl}/wallets/${organisationResponse.data.wallet.id}`
+              );
+              setWallet(walletResponse.data);
+            }
           }
-          if (userResponse.data.organisation === null) {
+          if (
+            userResponse.data.organisation === null &&
+            userResponse.data.wallet
+          ) {
             const walletResponse = await axios.get(
               `${baseUrl}/wallets/${userResponse.data.wallet}`
             );

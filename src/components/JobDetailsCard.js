@@ -152,6 +152,18 @@ export default function CardSettings() {
     } else setIsEditing(true);
   };
 
+  const getLink = (link) => {
+    if (link) {
+      let index = link.indexOf("upload");
+      index = index + 6;
+      return `${link.substring(0, index)}/fl_attachment${link.substring(
+        index
+      )}`;
+    }
+    return "";
+  };
+  console.log(printOrder);
+
   // const downloadOrder = () => {
   //   console.log("downloaded");
   // };
@@ -164,7 +176,7 @@ export default function CardSettings() {
             <h6 className="text-blueGray-700 text-xl font-bold">Job Details</h6>
             <div className="d-flex align-center">
               <a
-                href={`${baseUrl}${printOrder.file?.url}`}
+                href={getLink(printOrder.file?.url)}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
