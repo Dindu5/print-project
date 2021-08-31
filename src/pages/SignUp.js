@@ -71,7 +71,7 @@ const SubmitButtonTwo = styled.button`
 `;
 const IllustrationContainer = tw.div`sm:rounded-r-lg flex-1 bg-purple-100 text-center hidden lg:flex justify-center`;
 const IllustrationImage = styled.div`
-  ${(props) => `background-image: url("${props.imageSrc}");`}
+  ${(props) => `background-image: url("${props.imageSrc}")`}
   ${tw`m-12 xl:m-16 w-full max-w-lg bg-contain bg-center bg-no-repeat`}
 `;
 
@@ -172,16 +172,14 @@ export const SignUp = ({
         };
         organizationResponse = await axios.post(organisationUrl, orgValues);
       }
-      console.log(organizationResponse);
       const modifiedValues = {
         ...values,
         username: `${values.firstName} ${values.lastName}`,
         isOrganisation,
         organisation: isOrganisation ? organizationResponse.data : null,
-        wallet: isOrganisation ? {} : walletResponse.data.id,
+        wallet: isOrganisation ? null : walletResponse.data.id,
       };
       const userResponse = await axios.post(signupUrl, modifiedValues);
-      console.log(userResponse);
       successNotification("Your account has been created successfully");
       setloading(false);
       setValues({});

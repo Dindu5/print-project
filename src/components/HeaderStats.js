@@ -1,10 +1,12 @@
 import tw from "twin.macro";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { WalletContext } from "../context/WalletContext";
 import { PrintOrderContext } from "../context/PrintOrderContext";
 import { OrganisationContext } from "../context/OrganisationContext";
 import formatNaira from "format-to-naira";
+import axios from "axios";
+import baseUrl from "../api";
 
 // components
 
@@ -18,6 +20,8 @@ export default function HeaderStats() {
   const { printOrders } = useContext(PrintOrderContext);
   const { user } = useContext(UserContext);
   const { organisation } = useContext(OrganisationContext);
+  const [orgUsers, setorgUsers] = useState("0");
+  const [users, setusers] = useState("0");
 
   // State update
   const pendingOrders = printOrders.filter(
@@ -26,10 +30,27 @@ export default function HeaderStats() {
   const completedOrders = printOrders.filter(
     (order) => order.status === "completed"
   );
-  let organisationUsers = 0;
-  if (organisation.users) {
-    organisationUsers = `${organisation.users.length}`;
-  }
+  const submitForm = async () => {
+    const AuthToken = localStorage.getItem("AuthToken");
+    axios.defaults.headers.common.Authorization = AuthToken;
+    try {
+      const orgsResponse = await axios.get(
+        "https://pog-print-backend.herokuapp.com/organisations/count"
+      );
+      const usersResponse = await axios.get(
+        "https://pog-print-backend.herokuapp.com/users/count"
+      );
+      console.log("fileResponse", orgsResponse);
+      setorgUsers(orgsResponse.data);
+      setusers(usersResponse.data);
+      console.log(usersResponse);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    submitForm();
+  }, []);
   return (
     <>
       {/* Header */}
@@ -67,8 +88,8 @@ export default function HeaderStats() {
                   }
                   statTitle={
                     user.data.isOrganisation || user.data.isAdmin
-                      ? `${organisationUsers}` || "0"
-                      : `${completedOrders}`
+                      ? `${users}` || "0"
+                      : `${completedOrders.length}`
                   }
                   statPercentColor="text-orange-500"
                   statDescripiron={
@@ -84,7 +105,9 @@ export default function HeaderStats() {
                 <CardStats
                   statSubtitle={`${user.data.isAdmin ? "Orgs" : "Wallet"}`}
                   statTitle={`${
-                    wallet.amount ? formatNaira(wallet.amount) : 0
+                    user.data.isAdmin
+                      ? orgUsers
+                      : formatNaira(wallet.amount || 0)
                   }`}
                   statPercentColor="text-emerald-500"
                   statDescripiron={`${
