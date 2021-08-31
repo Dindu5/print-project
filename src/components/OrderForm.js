@@ -230,11 +230,11 @@ export const OrderForm = () => {
     if (values.proofReading) {
       amount = amount + 70;
     }
-    if (deliveryOption === "home") {
-      amount = amount + 100;
-    }
     if (values.noOfCopies) {
       amount = amount * values.noOfCopies;
+    }
+    if (deliveryOption === "home") {
+      amount = amount + 100;
     }
     setTotalAmount(amount);
   }, [values, deliveryOption, pages]);
