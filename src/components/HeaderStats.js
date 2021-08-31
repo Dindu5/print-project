@@ -6,7 +6,6 @@ import { PrintOrderContext } from "../context/PrintOrderContext";
 import { OrganisationContext } from "../context/OrganisationContext";
 import formatNaira from "format-to-naira";
 import axios from "axios";
-import baseUrl from "../api";
 
 // components
 
@@ -19,7 +18,7 @@ export default function HeaderStats() {
   const { wallet } = useContext(WalletContext);
   const { printOrders } = useContext(PrintOrderContext);
   const { user } = useContext(UserContext);
-  const { organisation } = useContext(OrganisationContext);
+  // const { organisation } = useContext(OrganisationContext);
   const [orgUsers, setorgUsers] = useState("0");
   const [users, setusers] = useState("0");
 
