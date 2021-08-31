@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Pagination from "./Pagination";
 import formatNaira from "format-to-naira";
+import img from "../assets/empty.svg";
 
 // components
 
@@ -125,107 +126,130 @@ export default function CardTable({ color, printOrders, title }) {
                 ></th>
               </tr>
             </thead>
-            <tbody>
-              {printOrders.map((order) => {
-                return (
-                  <tr key={order.id}>
-                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+            {printOrders.length > 0 ? (
+              <tbody>
+                {printOrders.map((order) => {
+                  return (
+                    <tr key={order.id}>
+                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                        <img
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hjxbQj0i-I3pfkx4iKiGbBGdRfTOZ1mhZg&usqp=CAU"
+                          className="h-8 w-8 bg-white rounded-full border"
+                          alt="..."
+                        ></img>{" "}
+                        <span
+                          className={
+                            "ml-3 font-bold " +
+                            +(color === "light"
+                              ? "text-blueGray-600"
+                              : "text-white")
+                          }
+                        >
+                          {formatName(order.name)}
+                        </span>
+                      </th>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        {formatNaira(order.amount)}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <i
+                          className={`fas fa-circle mr-2 ${
+                            order.status === "pending" && "text-red-500"
+                          } ${
+                            order.status === "processing" && "text-orange-500"
+                          } ${
+                            order.status === "completed" && "text-emerald-500"
+                          }
+                          ${
+                            order.status === "delivered" && "text-emerald-500"
+                          }`}
+                        ></i>{" "}
+                        {order.status}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        {order.users_permissions_user?.username ||
+                          order.firstName + " " + order.lastName}
+                        {/* <div className="flex">
                       <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hjxbQj0i-I3pfkx4iKiGbBGdRfTOZ1mhZg&usqp=CAU"
-                        className="h-8 w-8 bg-white rounded-full border"
+                        src={require("../images/team-1-800x800.jpg").default}
                         alt="..."
-                      ></img>{" "}
-                      <span
-                        className={
-                          "ml-3 font-bold " +
-                          +(color === "light"
-                            ? "text-blueGray-600"
-                            : "text-white")
-                        }
-                      >
-                        {formatName(order.name)}
-                      </span>
-                    </th>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {formatNaira(order.amount)}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      <i
-                        className={`fas fa-circle mr-2 ${
-                          order.status === "pending" && "text-red-500"
-                        } ${
-                          order.status === "processing" && "text-orange-500"
-                        } ${order.status === "completed" && "text-emerald-500"}
-                        ${order.status === "delivered" && "text-emerald-500"}`}
-                      ></i>{" "}
-                      {order.status}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {order.users_permissions_user?.username ||
-                        order.firstName + " " + order.lastName}
-                      {/* <div className="flex">
-                    <img
-                      src={require("../images/team-1-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                    ></img>
-                    <img
-                      src={require("../images/team-2-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                    <img
-                      src={require("../images/team-3-800x800.jpg").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                    <img
-                      src={require("../images/team-4-470x470.png").default}
-                      alt="..."
-                      className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                    ></img>
-                  </div> */}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      <div className="flex items-center">
-                        <span className="mr-2">{getWidth(order.status)}</span>
-                        <div className="relative w-full">
-                          <div
-                            className={`overflow-hidden h-2 text-xs flex rounded ${
-                              order.status === "pending" && "bg-red-200"
-                            } ${
-                              order.status === "processing" && "text-orange-200"
-                            } ${
-                              order.status === "completed" && "bg-teal-200"
-                            } ${
-                              order.status === "delivered" && "text-emerald-200"
-                            }`}
-                          >
+                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
+                      ></img>
+                      <img
+                        src={require("../images/team-2-800x800.jpg").default}
+                        alt="..."
+                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                      ></img>
+                      <img
+                        src={require("../images/team-3-800x800.jpg").default}
+                        alt="..."
+                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                      ></img>
+                      <img
+                        src={require("../images/team-4-470x470.png").default}
+                        alt="..."
+                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                      ></img>
+                    </div> */}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center">
+                          <span className="mr-2">{getWidth(order.status)}</span>
+                          <div className="relative w-full">
                             <div
-                              style={{ width: getWidth(order.status) }}
-                              className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
-                                order.status === "pending" && "bg-red-500"
+                              className={`overflow-hidden h-2 text-xs flex rounded ${
+                                order.status === "pending" && "bg-red-200"
                               } ${
                                 order.status === "processing" &&
-                                "text-orange-500"
+                                "text-orange-200"
                               } ${
-                                order.status === "completed" && "bg-teal-500"
+                                order.status === "completed" && "bg-teal-200"
                               } ${
                                 order.status === "delivered" &&
-                                "text-emerald-500"
+                                "text-emerald-200"
                               }`}
-                            ></div>
+                            >
+                              <div
+                                style={{ width: getWidth(order.status) }}
+                                className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
+                                  order.status === "pending" && "bg-red-500"
+                                } ${
+                                  order.status === "processing" &&
+                                  "text-orange-500"
+                                } ${
+                                  order.status === "completed" && "bg-teal-500"
+                                } ${
+                                  order.status === "delivered" &&
+                                  "text-emerald-500"
+                                }`}
+                              ></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                      <TableDropdown id={order.id} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                        <TableDropdown id={order.id} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            ) : (
+              <tbody>
+                <tr>
+                  <td colSpan="6">
+                    <div>
+                      <p className="text-center my-4">No data found</p>
+                      <img
+                        src={img}
+                        className="empty-image"
+                        alt="no data found"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
           <Pagination />
         </div>

@@ -25,7 +25,12 @@ Use a more readable tab size (opinionated).
   -moz-tab-size: 4;
   tab-size: 4;
 }
-
+.empty-image {
+  max-height: 200px;
+  display: block;
+  width: 50%;
+  margin: auto;
+}
 /**
 1. Correct the line height in all browsers.
 2. Prevent adjustments of font size after orientation changes in iOS.

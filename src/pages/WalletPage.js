@@ -30,8 +30,7 @@ export default function WalletPage() {
       const AuthToken = localStorage.getItem("AuthToken");
       axios.defaults.headers.common.Authorization = AuthToken;
       const updateResponse = await axios.put(updateUrl, {
-        ...wallet,
-        amount: newAmount + parseInt(wallet.amount),
+        amount: `${newAmount + parseInt(wallet.amount)}`,
       });
       swal(
         "Hurray! Your wallet has been topped up successfully successfully!",
