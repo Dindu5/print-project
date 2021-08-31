@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { WalletContext } from "../context/WalletContext";
 import { PrintOrderContext } from "../context/PrintOrderContext";
-import { OrganisationContext } from "../context/OrganisationContext";
+// import { OrganisationContext } from "../context/OrganisationContext";
 import formatNaira from "format-to-naira";
 import axios from "axios";
 
