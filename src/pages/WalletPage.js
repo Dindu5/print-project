@@ -8,6 +8,7 @@ import { PaystackButton } from "react-paystack";
 import baseUrl from "../api";
 import swal from "sweetalert";
 import axios from "axios";
+import formatNaira from "format-to-naira";
 
 const override = css`
   display: block;
@@ -105,7 +106,9 @@ export default function WalletPage() {
                   </label>
 
                   <p className="border-0 placeholder-blueGray-300 text-blueGray-700 rounded focus:outline-none focus:ring w-full ease-linear transition-all duration-150 bg-blueGray-100 px-0 pt-1 font-bold text-sm">
-                    {wallet.amount ? wallet.amount : 0}PP
+                    {wallet.amount
+                      ? formatNaira(wallet.amount)
+                      : formatNaira(0)}
                   </p>
                 </div>
               </div>
