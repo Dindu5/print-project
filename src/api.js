@@ -1,3 +1,3 @@
-const baseUrl = "https://strapi-l746.onrender.com/api";
+const baseUrl = "https://strapi-ab9t.onrender.com/api";
 
 export default baseUrl;
