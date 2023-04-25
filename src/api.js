@@ -1,3 +1,3 @@
-const baseUrl = "https://pog-print-backend.herokuapp.com";
+const baseUrl = "https://strapi-l746.onrender.com";
 
 export default baseUrl;
